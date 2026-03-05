@@ -20,17 +20,14 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
-# Install only production dependencies
-RUN npm ci --only=production
+# Install a simple HTTP server
+RUN npm install -g serve
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
 
-# Expose port (Vite preview uses 4173 by default, but we'll use 5174)
+# Expose port
 EXPOSE 5174
 
-# Start the application with host binding
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5174"]
+# Start the application with serve
+CMD ["serve", "-s", "dist", "-l", "5174"]
