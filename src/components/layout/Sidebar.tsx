@@ -14,10 +14,16 @@ import {
   X,
   HelpCircle,
   BookOpen,
-  Video,
   MessageCircle,
+  ExternalLink,
   ChevronRight,
-  ExternalLink
+  Zap,
+  Target,
+  BarChart3,
+  Clock,
+  Download,
+  Filter,
+  Layers
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
@@ -167,28 +173,47 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
             {/* Content */}
             <div className="p-6 space-y-8">
               {/* Quick Links */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <a href="#" className="group p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl hover:border-cyan-500/40 transition-all">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="mailto:soporte@flesad.com" className="group p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl hover:border-cyan-500/40 transition-all">
                   <div className="flex items-center gap-3 mb-2">
-                    <BookOpen className="w-5 h-5 text-cyan-400" />
-                    <h3 className="font-semibold text-white">Documentación</h3>
+                    <MessageCircle className="w-5 h-5 text-cyan-400" />
+                    <h3 className="font-semibold text-white">Contactar Soporte</h3>
                   </div>
-                  <p className="text-xs text-gray-400">Guías completas de cada módulo</p>
-                </a>
-                <a href="#" className="group p-4 bg-gradient-to-br from-magenta-500/10 to-purple-500/10 border border-magenta-500/20 rounded-xl hover:border-magenta-500/40 transition-all">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Video className="w-5 h-5 text-magenta-400" />
-                    <h3 className="font-semibold text-white">Video Tutoriales</h3>
-                  </div>
-                  <p className="text-xs text-gray-400">Aprende viendo videos paso a paso</p>
+                  <p className="text-xs text-gray-400">soporte@flesad.com - Respondemos en menos de 24hrs</p>
                 </a>
                 <a href="#" className="group p-4 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 transition-all">
                   <div className="flex items-center gap-3 mb-2">
-                    <MessageCircle className="w-5 h-5 text-emerald-400" />
-                    <h3 className="font-semibold text-white">Soporte Técnico</h3>
+                    <BookOpen className="w-5 h-5 text-emerald-400" />
+                    <h3 className="font-semibold text-white">Guía de Usuario</h3>
                   </div>
-                  <p className="text-xs text-gray-400">Contacta a nuestro equipo</p>
+                  <p className="text-xs text-gray-400">Documentación completa en PDF descargable</p>
                 </a>
+              </div>
+
+              {/* Guía de Inicio Rápido */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-amber-400" />
+                  Guía de Inicio Rápido
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                    <h4 className="font-medium text-white mb-2">1. Explora el Command Center</h4>
+                    <p className="text-sm text-gray-400">Comienza por el panel principal para ver los KPIs en tiempo real y tener una visión general del tráfico y rendimiento de tu negocio.</p>
+                  </div>
+                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                    <h4 className="font-medium text-white mb-2">2. Analiza tu Competencia</h4>
+                    <p className="text-sm text-gray-400">Usa Brand Intelligence para comparar el share de tráfico de diferentes marcas y entender tu posición en el mercado.</p>
+                  </div>
+                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                    <h4 className="font-medium text-white mb-2">3. Encuentra la Ubicación Perfecta</h4>
+                    <p className="text-sm text-gray-400">Geo Intelligence te muestra el mapa de calor de Santiago para identificar las zonas de mayor tráfico según tu target.</p>
+                  </div>
+                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                    <h4 className="font-medium text-white mb-2">4. Genera Propuestas con IA</h4>
+                    <p className="text-sm text-gray-400">Sales Intelligence crea propuestas de valor automáticas basadas en datos reales de audiencia para tus clientes.</p>
+                  </div>
+                </div>
               </div>
 
               {/* Módulos de la App */}
@@ -273,38 +298,118 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                 </div>
               </div>
 
-              {/* FAQ */}
+              {/* FAQ Completa */}
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4">Preguntas Frecuentes</h3>
                 <div className="space-y-3">
                   <FAQItem
                     question="¿Cómo se calcula el Share de Tráfico?"
-                    answer="El Share se calcula dividiendo el número de vehículos detectados de una marca entre el total de vehículos del segmento seleccionado, multiplicado por 100. Los datos provienen de nuestros sensores en tiempo real."
+                    answer="El Share se calcula dividiendo el número de vehículos detectados de una marca entre el total de vehículos del segmento seleccionado, multiplicado por 100. Los datos provienen de nuestros sensores en tiempo real instalados en cada pantalla."
                   />
                   <FAQItem
                     question="¿Qué significa el CPM estimado?"
-                    answer="El CPM (Costo Por Mil impresiones) estimado se calcula basándose en el volumen de tráfico detectado, la ubicación de la pantalla y el perfil socioeconómico de la zona."
+                    answer="El CPM (Costo Por Mil impresiones) estimado se calcula basándose en el volumen de tráfico detectado, la ubicación de la pantalla, el perfil socioeconómico de la zona y el tipo de vehículos que transitan por el sector."
                   />
                   <FAQItem
                     question="¿Cómo usar el Audience Match?"
-                    answer="Selecciona el perfil de audiencia objetivo (Premium, Familiar, Joven, Masivo) y el sistema te recomendará las 3 mejores pantallas basándose en los patrones de tráfico detectados."
+                    answer="En Sales Intelligence, selecciona el perfil de audiencia objetivo (Premium, Familiar, Joven, Masivo) y el sistema analizará los patrones de tráfico para recomendarte las 3 mejores pantallas. Cada recomendación incluye un score de match y la razón específica."
                   />
                   <FAQItem
                     question="¿Los datos son en tiempo real?"
-                    answer="Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Sin embargo, algunos análisis históricos pueden tener un delay de 24 horas para procesamiento."
+                    answer="Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Los KPIs del Command Center y las alertas se actualizan automáticamente. Algunos análisis históricos y comparativos pueden tener un delay de 24 horas para procesamiento de datos."
                   />
                   <FAQItem
                     question="¿Puedo exportar los reportes?"
-                    answer="Sí, todos los módulos permiten exportar datos en formato CSV o generar reportes PDF personalizados con tu branding."
+                    answer="Sí, todos los módulos permiten exportar datos en formato CSV. También puedes generar reportes PDF personalizados con tu branding desde el botón superior de cada página."
                   />
+                  <FAQItem
+                    question="¿Qué es la Time Machine?"
+                    answer="Time Machine es una herramienta que te permite comparar períodos temporales diferentes y predecir tráfico futuro usando IA. Incluye la 'Cápsula del Tiempo' para revivir fechas específicas y analizar tendencias estacionales."
+                  />
+                  <FAQItem
+                    question="¿Cómo funciona el Competitor Tracker?"
+                    answer="En Sales Intelligence, selecciona una marca y el sistema mostrará un gráfico comparativo del tráfico de esa marca vs sus competidores directos en diferentes pantallas. Incluye insights estratégicos para identificar oportunidades de ataque."
+                  />
+                  <FAQItem
+                    question="¿Qué son los Prospectos por Rubro?"
+                    answer="Es una sección de Sales Intelligence que muestra 10 industrias potenciales para ofrecer publicidad OOH. Cada rubro incluye perfil cuantitativo, cualitativo, comportamiento por comuna y recomendaciones de campaña con inversión estimada."
+                  />
+                </div>
+              </div>
+
+              {/* Glosario de Términos */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-purple-400" />
+                  Glosario de Términos
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <GlossaryItem term="Share de Tráfico" definition="Porcentaje del total de vehículos que representa una marca en un segmento específico." />
+                  <GlossaryItem term="CPM" definition="Costo Por Mil impresiones. Métrica estándar para comparar eficiencia de medios." />
+                  <GlossaryItem term="Reach" definition="Número de personas únicas expuestas a una pantalla o campaña." />
+                  <GlossaryItem term="Frecuencia" definition="Promedio de veces que una persona ve una pantalla en un período." />
+                  <GlossaryItem term="YoY (Year over Year)" definition="Comparación del mismo período entre años diferentes para medir crecimiento real." />
+                  <GlossaryItem term="Heatmap" definition="Mapa de calor que muestra densidad de tráfico con colores (rojo = alto, azul = bajo)." />
+                  <GlossaryItem term="Premium Area" definition="Zona con alta concentración de vehículos de marcas premium (BMW, Mercedes, Audi, etc.)." />
+                  <GlossaryItem term="Commute" definition="Trayecto habitual entre casa y trabajo. Horarios peak: 07:00-09:00 y 17:00-20:00." />
+                </div>
+              </div>
+
+              {/* Atajos de Teclado */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-cyan-400" />
+                  Atajos y Consejos Útiles
+                </h3>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 rounded bg-cyan-500/10 border border-cyan-500/20">
+                      <Target className="w-4 h-4 text-cyan-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-white">Segmenta por Tipo de Vehículo</h4>
+                      <p className="text-xs text-gray-400">Usa los filtros superiores para analizar tráfico por tipo: Sedán, SUV, Pick-up, etc.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 rounded bg-magenta-500/10 border border-magenta-500/20">
+                      <BarChart3 className="w-4 h-4 text-magenta-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-white">Compara Períodos</h4>
+                      <p className="text-xs text-gray-400">En Time Machine, compara cualquier fecha con el mismo día del año anterior para ver tendencias.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                      <Layers className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-white">Activa Capas en el Mapa</h4>
+                      <p className="text-xs text-gray-400">En Geo Intelligence, activa capas de transporte público y límites comunales para más contexto.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 rounded bg-amber-500/10 border border-amber-500/20">
+                      <Download className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-white">Exporta Tus Datos</h4>
+                      <p className="text-xs text-gray-400">Todos los gráficos y tablas pueden exportarse a CSV para análisis externo en Excel o Google Sheets.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Contacto Soporte */}
               <div className="bg-gradient-to-br from-cyan-500/10 to-magenta-500/10 border border-cyan-500/20 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-3">¿Necesitas ayuda adicional?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-cyan-400" />
+                  ¿Necesitas ayuda adicional?
+                </h3>
                 <p className="text-sm text-gray-300 mb-4">
-                  Nuestro equipo de soporte está disponible para ayudarte con cualquier consulta técnica o funcional.
+                  Nuestro equipo de soporte está disponible para ayudarte con cualquier consulta técnica o funcional. 
+                  También ofrecemos sesiones de capacitación personalizadas para tu equipo.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
@@ -312,16 +417,19 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                     className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    Enviar Email
+                    soporte@flesad.com
                   </a>
                   <a
                     href="#"
                     className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    Chat en Vivo
+                    Solicitar Capacitación
                   </a>
                 </div>
+                <p className="text-xs text-gray-500 mt-4">
+                  Horario de atención: Lunes a Viernes, 9:00 - 18:00 hrs (Chile)
+                </p>
               </div>
             </div>
           </motion.div>
@@ -396,6 +504,16 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
           <p className="text-sm text-gray-400 mt-3 leading-relaxed">{answer}</p>
         </div>
       )}
+    </div>
+  );
+}
+
+// Componente interno para Glosario
+function GlossaryItem({ term, definition }: { term: string; definition: string }) {
+  return (
+    <div className="bg-navy-950/30 border border-white/5 rounded-lg p-3">
+      <h4 className="text-sm font-medium text-cyan-400 mb-1">{term}</h4>
+      <p className="text-xs text-gray-400">{definition}</p>
     </div>
   );
 }
