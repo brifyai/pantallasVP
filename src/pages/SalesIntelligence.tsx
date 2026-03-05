@@ -12,7 +12,19 @@ import {
   Target as TargetIcon,
   Lightbulb,
   TrendingUp as TrendingUpIcon,
-  Check
+  Check,
+  Car,
+  Building2,
+  HeartPulse,
+  GraduationCap,
+  ShoppingCart,
+  Utensils,
+  Home,
+  Smartphone,
+  Plane,
+  Package,
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { SCREENS, BRANDS, PREMIUM_BRANDS } from '../data/mockData';
 import { cn } from '../utils/cn';
@@ -38,6 +50,19 @@ interface Proposal {
   opportunity: ProposalSection;
   recommendation: ProposalSection;
   projection: ProposalSection;
+}
+
+interface IndustryProspect {
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  color: string;
+  gradient: string;
+  cpm: string;
+  audience: string;
+  insight: string;
+  subRubros: { name: string; reason: string }[];
+  priority: 'Alta' | 'Media' | 'Baja';
 }
 
 export function SalesIntelligence() {
@@ -312,6 +337,188 @@ export function SalesIntelligence() {
     return `${proposal.diagnosis.title}: ${proposal.diagnosis.content}\n\n${proposal.opportunity.title}:\n${proposal.opportunity.items?.join('\n')}\n\n${proposal.recommendation.title}: ${proposal.recommendation.content}\n\n${proposal.projection.title}: ${proposal.projection.content}`;
   };
 
+  // Prospectos por Rubro
+  const industryProspects: IndustryProspect[] = [
+    {
+      id: 'automotriz',
+      name: 'Automotriz',
+      icon: Car,
+      color: 'text-cyan-400',
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      cpm: '$3.200',
+      audience: '35% vehículos premium',
+      insight: 'Alta concentración en Las Condes/Vitacura',
+      subRubros: [
+        { name: 'Concesionarios Premium', reason: 'Audiencia ABC1 detectada' },
+        { name: 'Seguros de Automóviles', reason: 'Segmento premium busca cobertura' },
+        { name: 'Mantenimiento Automotriz', reason: 'Dueños vehículos 2018+ valoran calidad' },
+        { name: 'Accesorios y Tuning', reason: 'Conductores jóvenes en Providencia' }
+      ],
+      priority: 'Alta'
+    },
+    {
+      id: 'financiero',
+      name: 'Servicios Financieros',
+      icon: Building2,
+      color: 'text-emerald-400',
+      gradient: 'from-emerald-500/20 to-teal-500/20',
+      cpm: '$2.800',
+      audience: '78% retención visual AM',
+      insight: 'Profesionales 30-55 años en commuting',
+      subRubros: [
+        { name: 'Bancos Premium', reason: 'Segmento ABC1 alto poder adquisitivo' },
+        { name: 'AFP y Fondos', reason: 'Profesionales en planificación' },
+        { name: 'Inmobiliarias', reason: 'Familias en búsqueda de vivienda' },
+        { name: 'Fintech', reason: 'Jóvenes profesionales digitales' }
+      ],
+      priority: 'Alta'
+    },
+    {
+      id: 'salud',
+      name: 'Salud y Bienestar',
+      icon: HeartPulse,
+      color: 'text-rose-400',
+      gradient: 'from-rose-500/20 to-pink-500/20',
+      cpm: '$2.100',
+      audience: '42% SUVs familiares',
+      insight: 'Familias ABC1 en Maipú/La Florida',
+      subRubros: [
+        { name: 'Clínicas Privadas', reason: 'Familias segmento ABC1' },
+        { name: 'Seguros Complementarios', reason: 'Profesionales con capacidad de pago' },
+        { name: 'Farmacias Especialidad', reason: 'Audiencia con poder adquisitivo' },
+        { name: 'Gimnasios Premium', reason: 'Segmento joven profesional' }
+      ],
+      priority: 'Alta'
+    },
+    {
+      id: 'educacion',
+      name: 'Educación',
+      icon: GraduationCap,
+      color: 'text-amber-400',
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      cpm: '$1.800',
+      audience: '12.400 vehículos/día',
+      insight: 'Zona universitaria Santiago Centro',
+      subRubros: [
+        { name: 'Universidades', reason: 'Zona universitaria detectada' },
+        { name: 'Colegios Privados', reason: 'Familias en rutas escolares' },
+        { name: 'Idiomas', reason: 'Profesionales en desarrollo' },
+        { name: 'Educación Ejecutiva', reason: 'Segmento corporativo' }
+      ],
+      priority: 'Media'
+    },
+    {
+      id: 'retail',
+      name: 'Retail y E-commerce',
+      icon: ShoppingCart,
+      color: 'text-purple-400',
+      gradient: 'from-purple-500/20 to-violet-500/20',
+      cpm: '$1.800',
+      audience: '89.000 vehículos/día',
+      insight: 'Ejes estratégicos de Santiago',
+      subRubros: [
+        { name: 'Centros Comerciales', reason: 'Audiencia masiva en tránsito' },
+        { name: 'Tiendas Tecnología', reason: 'Jóvenes profesionales early adopters' },
+        { name: 'Marcas de Lujo', reason: 'Segmento premium Vitacura' },
+        { name: 'Supermercados Premium', reason: 'Familias ABC1' }
+      ],
+      priority: 'Media'
+    },
+    {
+      id: 'gastronomia',
+      name: 'Gastronomía',
+      icon: Utensils,
+      color: 'text-orange-400',
+      gradient: 'from-orange-500/20 to-red-500/20',
+      cpm: '$2.000',
+      audience: 'Zonas gastronómicas',
+      insight: 'Providencia y Ñuñoa alto flujo',
+      subRubros: [
+        { name: 'Restaurantes', reason: 'Zonas gastronómicas detectadas' },
+        { name: 'Delivery Apps', reason: 'Profesionales digitales' },
+        { name: 'Cafeterías Premium', reason: 'Segmento joven urbano' },
+        { name: 'Bares y Vida Nocturna', reason: 'Zona universitaria' }
+      ],
+      priority: 'Media'
+    },
+    {
+      id: 'inmobiliario',
+      name: 'Inmobiliario',
+      icon: Home,
+      color: 'text-indigo-400',
+      gradient: 'from-indigo-500/20 to-blue-500/20',
+      cpm: '$2.500',
+      audience: 'Familias en tránsito',
+      insight: 'Rutas residenciales premium',
+      subRubros: [
+        { name: 'Proyectos Inmobiliarios', reason: 'Familias en búsqueda de hogar' },
+        { name: 'Inmobiliarias Comerciales', reason: 'Profesionales empresarios' },
+        { name: 'Constructoras', reason: 'Segmento ABC1' },
+        { name: 'Arriendo de Oficinas', reason: 'Zona empresarial Las Condes' }
+      ],
+      priority: 'Alta'
+    },
+    {
+      id: 'tecnologia',
+      name: 'Tecnología',
+      icon: Smartphone,
+      color: 'text-violet-400',
+      gradient: 'from-violet-500/20 to-purple-500/20',
+      cpm: '$2.400',
+      audience: '52% conductores 25-35',
+      insight: 'Ñuñoa y Providencia jóvenes',
+      subRubros: [
+        { name: 'Operadoras Móviles', reason: 'Profesionales digitales' },
+        { name: 'ISPs Internet', reason: 'Familias conectadas' },
+        { name: 'Software SaaS', reason: 'Zona empresarial tech' },
+        { name: 'Dispositivos', reason: 'Jóvenes early adopters' }
+      ],
+      priority: 'Media'
+    },
+    {
+      id: 'turismo',
+      name: 'Viajes y Turismo',
+      icon: Plane,
+      color: 'text-sky-400',
+      gradient: 'from-sky-500/20 to-cyan-500/20',
+      cpm: '$2.600',
+      audience: 'Segmento ABC1 viajero',
+      insight: 'Vitacura y Las Condes',
+      subRubros: [
+        { name: 'Aerolíneas', reason: 'Segmento ABC1 viajero' },
+        { name: 'Hoteles y Resorts', reason: 'Familias premium' },
+        { name: 'Arriendo Vehículos', reason: 'Profesionales y turistas' },
+        { name: 'Agencias de Viaje', reason: 'Audiencia con poder adquisitivo' }
+      ],
+      priority: 'Media'
+    },
+    {
+      id: 'consumo',
+      name: 'Consumo Masivo',
+      icon: Package,
+      color: 'text-lime-400',
+      gradient: 'from-lime-500/20 to-green-500/20',
+      cpm: '$1.500',
+      audience: 'Masivo en tránsito',
+      insight: 'Ejes Norte-Sur y Costanera',
+      subRubros: [
+        { name: 'Bebidas y Alimentos', reason: 'Audiencia masiva en tránsito' },
+        { name: 'Cuidado Personal', reason: 'Segmento joven y familiar' },
+        { name: 'Productos Limpieza', reason: 'Familias en commuting' },
+        { name: 'Mascotas', reason: 'Familias urbanas' }
+      ],
+      priority: 'Baja'
+    }
+  ];
+
+  const [selectedProspect, setSelectedProspect] = useState<IndustryProspect | null>(null);
+  const [showProspectModal, setShowProspectModal] = useState(false);
+
+  const handleProspectClick = (prospect: IndustryProspect) => {
+    setSelectedProspect(prospect);
+    setShowProspectModal(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -355,6 +562,203 @@ export function SalesIntelligence() {
           </motion.div>
         ))}
       </div>
+
+      {/* Prospectos por Rubro - Nueva Sección */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-white">Prospectos por Rubro</h2>
+            <p className="text-sm text-gray-400">Industrias ideales para ofrecer publicidad en pantallas OOH</p>
+          </div>
+          <div className="flex gap-2">
+            <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium">
+              {industryProspects.filter(p => p.priority === 'Alta').length} Prioridad Alta
+            </span>
+            <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-medium">
+              {industryProspects.filter(p => p.priority === 'Media').length} Prioridad Media
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {industryProspects.map((prospect, index) => (
+            <motion.div
+              key={prospect.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              onClick={() => handleProspectClick(prospect)}
+              className={cn(
+                "bg-navy-900/50 backdrop-blur-md rounded-xl border p-4 cursor-pointer transition-all hover:scale-105 group",
+                prospect.priority === 'Alta' ? 'border-emerald-500/30 hover:border-emerald-500/50' :
+                prospect.priority === 'Media' ? 'border-amber-500/30 hover:border-amber-500/50' :
+                'border-white/10 hover:border-white/20'
+              )}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className={cn("p-2 rounded-lg bg-gradient-to-br", prospect.gradient)}>
+                  <prospect.icon className={cn("w-5 h-5", prospect.color)} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-white">{prospect.name}</h3>
+                  <span className={cn(
+                    "text-[10px] px-1.5 py-0.5 rounded-full",
+                    prospect.priority === 'Alta' ? 'bg-emerald-500/20 text-emerald-400' :
+                    prospect.priority === 'Media' ? 'bg-amber-500/20 text-amber-400' :
+                    'bg-gray-500/20 text-gray-400'
+                  )}>
+                    {prospect.priority}
+                  </span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">CPM Est.</span>
+                  <span className="text-white font-medium">{prospect.cpm}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">Audiencia</span>
+                  <span className="text-white font-medium truncate max-w-[120px]">{prospect.audience}</span>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-white/10">
+                <p className="text-xs text-gray-400 line-clamp-2">{prospect.insight}</p>
+              </div>
+              <div className="mt-3 flex items-center text-cyan-400 text-xs font-medium group-hover:text-cyan-300 transition-colors">
+                Ver detalles
+                <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Modal de Prospecto */}
+      {showProspectModal && selectedProspect && typeof document !== 'undefined' && createPortal(
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[99998] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setShowProspectModal(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#0a0a1a] border border-white/20 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+          >
+            {/* Header */}
+            <div className="sticky top-0 bg-[#0a0a1a]/95 backdrop-blur border-b border-white/10 p-6 flex items-center justify-between z-10">
+              <div className="flex items-center gap-4">
+                <div className={cn("p-3 rounded-xl bg-gradient-to-br", selectedProspect.gradient)}>
+                  <selectedProspect.icon className={cn("w-6 h-6", selectedProspect.color)} />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white">{selectedProspect.name}</h2>
+                  <p className="text-xs text-gray-400">Oportunidad de Publicidad OOH</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowProspectModal(false)}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Métricas Clave */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
+                  <p className="text-xs text-gray-400 mb-1">CPM Estimado</p>
+                  <p className="text-2xl font-bold text-white">{selectedProspect.cpm}</p>
+                </div>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
+                  <p className="text-xs text-gray-400 mb-1">Audiencia</p>
+                  <p className="text-sm font-bold text-white">{selectedProspect.audience}</p>
+                </div>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
+                  <p className="text-xs text-gray-400 mb-1">Prioridad</p>
+                  <span className={cn(
+                    "text-sm font-bold px-2 py-1 rounded-full",
+                    selectedProspect.priority === 'Alta' ? 'bg-emerald-500/20 text-emerald-400' :
+                    selectedProspect.priority === 'Media' ? 'bg-amber-500/20 text-amber-400' :
+                    'bg-gray-500/20 text-gray-400'
+                  )}>
+                    {selectedProspect.priority}
+                  </span>
+                </div>
+              </div>
+
+              {/* Insight Principal */}
+              <div className={cn("rounded-xl p-5 bg-gradient-to-br", selectedProspect.gradient, "border", selectedProspect.color.replace('text-', 'border-').replace('400', '500/30'))}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={cn("p-2 rounded-lg", selectedProspect.color.replace('text-', 'bg-').replace('400', '500/20'))}>
+                    <Lightbulb className={cn("w-5 h-5", selectedProspect.color)} />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Insight Clave</h3>
+                </div>
+                <p className="text-gray-300 leading-relaxed">{selectedProspect.insight}</p>
+              </div>
+
+              {/* Sub-rubros */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4">Sub-rubros Recomendados</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {selectedProspect.subRubros.map((subRubro, idx) => (
+                    <div key={idx} className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={cn("p-1.5 rounded-lg mt-0.5", selectedProspect.color.replace('text-', 'bg-').replace('400', '500/20'))}>
+                          <Check className={cn("w-3.5 h-3.5", selectedProspect.color)} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-white">{subRubro.name}</p>
+                          <p className="text-xs text-gray-400 mt-1">{subRubro.reason}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Argumento de Venta */}
+              <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-lg bg-cyan-500/20 border border-cyan-500/30">
+                    <Target className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Argumento de Venta</h3>
+                </div>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  Nuestras pantallas en ubicaciones estratégicas captan <strong className="text-white">{selectedProspect.audience}</strong>. 
+                  Con un CPM estimado de <strong className="text-white">{selectedProspect.cpm}</strong>, 
+                  su marca puede alcanzar a este segmento con mensajes personalizados en momentos clave del día.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer Actions */}
+            <div className="sticky bottom-0 bg-[#0a0a1a]/95 backdrop-blur border-t border-white/10 p-6 flex gap-3">
+              <button
+                className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                <FileText className="w-4 h-4" />
+                Generar Propuesta
+              </button>
+              <button
+                onClick={() => setShowProspectModal(false)}
+                className="flex-1 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:opacity-90 text-white font-medium rounded-lg transition-opacity"
+              >
+                Cerrar
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>,
+        document.body
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Audience Matcher */}
