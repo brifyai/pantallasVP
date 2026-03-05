@@ -61,30 +61,30 @@ export function KPICards({ data }: KPICardsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6 mb-6 md:mb-8">
       {cards.map((card, idx) => (
         <motion.div
           key={idx}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1, duration: 0.5 }}
-          className="bg-navy-900/50 backdrop-blur-md p-5 border border-white/10 rounded-xl relative overflow-hidden group"
+          className="bg-navy-900/50 backdrop-blur-md p-3 md:p-5 border border-white/10 rounded-xl relative overflow-hidden group"
         >
           {/* Neon glow effect on hover */}
           <div className={`absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
           
-          <div className="flex justify-between items-start mb-4 relative z-10">
-            <div className={`p-3 rounded-xl ${card.bg} ${card.color}`}>
-              <card.icon size={22} strokeWidth={2.5} />
+          <div className="flex justify-between items-start mb-3 md:mb-4 relative z-10">
+            <div className={`p-2 md:p-3 rounded-xl ${card.bg} ${card.color}`}>
+              <card.icon size={18} strokeWidth={2.5} className="w-4 h-4 md:w-5 md:h-5" />
             </div>
-            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-white/5 text-gray-300">
+            <span className="text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 md:py-1 rounded-full bg-white/5 text-gray-300">
               {card.trend}
             </span>
           </div>
           
           <div className="relative z-10">
-            <h3 className="text-gray-400 text-sm font-medium mb-1">{card.title}</h3>
-            <p className="text-2xl font-bold text-white tracking-tight">{card.value}</p>
+            <h3 className="text-gray-400 text-[10px] md:text-sm font-medium mb-0.5 md:mb-1">{card.title}</h3>
+            <p className="text-lg md:text-2xl font-bold text-white tracking-tight">{card.value}</p>
           </div>
         </motion.div>
       ))}

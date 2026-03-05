@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Bell, Calendar, ChevronDown, Check, TrendingUp, AlertTriangle, Info } from 'lucide-react';
+import { Search, Bell, Calendar, ChevronDown, Check, TrendingUp, AlertTriangle, Info, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MOCK_NOTIFICATIONS = [
@@ -43,7 +43,11 @@ const PERIODS = [
   'Personalizado...'
 ];
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(MOCK_NOTIFICATIONS.length);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -77,10 +81,18 @@ export function Header() {
   };
 
   return (
-    <header className="h-20 border-b border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl sticky top-0 z-40 flex items-center justify-between px-8 relative">
+    <header className="h-16 md:h-20 border-b border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl sticky top-0 z-40 flex items-center justify-between px-4 md:px-8 relative">
       
+      {/* Mobile Menu Button */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden p-2 text-gray-400 hover:text-white transition-colors mr-2"
+      >
+        <Menu size={24} />
+      </button>
+
       {/* Search Bar */}
-      <div className="relative w-96 hidden md:block">
+      <div className="relative w-48 sm:w-64 md:w-96 hidden md:block">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search size={18} className="text-gray-500" />
         </div>
@@ -92,7 +104,7 @@ export function Header() {
       </div>
 
       {/* Right Actions */}
-      <div className="flex items-center gap-6 ml-auto md:ml-0">
+      <div className="flex items-center gap-3 md:gap-6 ml-auto md:ml-0">
         
         {/* Date Selector */}
         <div className="relative hidden sm:block" ref={dateRef}>
@@ -139,11 +151,11 @@ export function Header() {
 
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
-          <button 
+          <button
             onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
             className="relative p-2 text-gray-400 hover:text-white transition-colors focus:outline-none hover:text-[rgb(var(--accent-lime))]"
           >
-            <Bell size={20} />
+            <Bell size={20} className="w-4 h-4 md:w-5 md:h-5" />
             {unreadCount > 0 && (
               <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-[rgb(var(--accent-lime))] shadow-[0_0_12px_rgba(var(--accent-lime),0.9)] border-2 border-[rgba(10,10,26,1)]"></span>
             )}
@@ -157,7 +169,7 @@ export function Header() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-0 mt-4 w-80 sm:w-96 rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(15,15,30,0.85)] backdrop-blur-2xl shadow-2xl overflow-hidden z-50 origin-top-right"
+                className="absolute right-0 mt-4 w-72 sm:w-80 md:w-96 rounded-2xl border border-[rgba(255,255,255,0.1)] bg-[rgba(15,15,30,0.85)] backdrop-blur-2xl shadow-2xl overflow-hidden z-50 origin-top-right"
               >
                 <div className="p-4 border-b border-[rgba(255,255,255,0.05)] flex justify-between items-center bg-[rgba(0,0,0,0.2)]">
                   <h3 className="text-white font-medium flex items-center gap-2">
@@ -224,15 +236,15 @@ export function Header() {
         </div>
 
         {/* User Profile */}
-        <div className="flex items-center gap-3 border-l border-[rgba(255,255,255,0.1)] pl-6 cursor-pointer group">
+        <div className="flex items-center gap-2 md:gap-3 border-l border-[rgba(255,255,255,0.1)] pl-3 md:pl-6 cursor-pointer group">
           <div className="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
-              alt="User" 
-              className="w-9 h-9 rounded-full border border-[rgba(var(--accent-cyan),0.3)] object-cover group-hover:border-[rgb(var(--accent-cyan))] transition-colors"
+            <img
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt="User"
+              className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-[rgba(var(--accent-cyan),0.3)] object-cover group-hover:border-[rgb(var(--accent-cyan))] transition-colors"
             />
             {/* Online Indicator */}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[rgb(var(--accent-lime))] border-2 border-[#0a0a1a]"></span>
+            <span className="absolute bottom-0 right-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-[rgb(var(--accent-lime))] border-2 border-[#0a0a1a]"></span>
           </div>
           <div className="hidden md:block">
             <p className="text-sm font-medium text-white leading-none group-hover:text-[rgb(var(--accent-cyan))] transition-colors">Admin Usuario</p>

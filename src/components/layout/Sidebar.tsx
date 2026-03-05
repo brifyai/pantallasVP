@@ -1,14 +1,15 @@
 // src/components/layout/Sidebar.tsx
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  BarChart2, 
-  Map, 
-  MonitorPlay, 
-  TrendingUp, 
+import {
+  LayoutDashboard,
+  BarChart2,
+  Map,
+  MonitorPlay,
+  TrendingUp,
   History,
   LogOut,
-  Settings
+  Settings,
+  X
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -23,13 +24,19 @@ const NAV_ITEMS = [
 
 interface SidebarProps {
   activeView: string;
+  isMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
-export function Sidebar({ activeView }: SidebarProps) {
+export function Sidebar({ activeView, isMobile = false, onCloseMobile }: SidebarProps) {
+  const sidebarClasses = isMobile
+    ? 'mobile-sidebar active'
+    : 'w-64 h-screen border-r border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl flex flex-col justify-between fixed left-0 top-0 z-50';
+
   return (
-    <div className="w-64 h-screen border-r border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl flex flex-col justify-between fixed left-0 top-0 z-50">
+    <div className={sidebarClasses}>
       <div>
-        <div className="h-20 flex items-center px-6 border-b border-[rgba(255,255,255,0.05)]">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-[rgba(255,255,255,0.05)]">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[rgb(var(--accent-cyan))] to-[rgb(var(--accent-magenta))] flex items-center justify-center font-bold text-white text-xl">
               F
@@ -41,6 +48,14 @@ export function Sidebar({ activeView }: SidebarProps) {
               <span className="text-[10px] text-[rgb(var(--accent-cyan))] font-bold uppercase tracking-[0.3em] mt-0.5">Analytics</span>
             </div>
           </div>
+          {isMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              <X size={24} />
+            </button>
+          )}
         </div>
 
         <nav className="p-4 space-y-2">
@@ -50,6 +65,7 @@ export function Sidebar({ activeView }: SidebarProps) {
               <NavLink
                 to={item.path}
                 key={item.path}
+                onClick={isMobile ? onCloseMobile : undefined}
                 className={({ isActive }) =>
                   `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
                     isActive
@@ -73,6 +89,7 @@ export function Sidebar({ activeView }: SidebarProps) {
       <div className="p-4 border-t border-[rgba(255,255,255,0.05)] space-y-2">
         <NavLink
           to="/settings"
+          onClick={isMobile ? onCloseMobile : undefined}
           className={({ isActive }) =>
             `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
               isActive
