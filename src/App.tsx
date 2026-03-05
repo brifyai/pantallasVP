@@ -7,6 +7,7 @@ import { GeoIntelligence } from './pages/GeoIntelligence';
 import { SalesIntelligence } from './pages/SalesIntelligence';
 import { TimeMachine } from './pages/TimeMachine';
 import { Settings } from './pages/Settings';
+import { Team } from './pages/Team';
 
 export function App() {
   return (
@@ -20,6 +21,7 @@ export function App() {
           <Route path="geo" element={<GeoIntelligence />} />
           <Route path="sales" element={<SalesIntelligence />} />
           <Route path="time" element={<TimeMachine />} />
+          <Route path="team" element={<Team />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

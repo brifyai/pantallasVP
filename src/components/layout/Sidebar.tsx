@@ -23,7 +23,9 @@ import {
   Clock,
   Download,
   Filter,
-  Layers
+  Layers,
+  Users,
+  Briefcase
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
@@ -35,6 +37,7 @@ const NAV_ITEMS = [
   { path: '/geo', icon: Map, label: 'Geo Intelligence' },
   { path: '/sales', icon: TrendingUp, label: 'Sales Intelligence' },
   { path: '/time', icon: History, label: 'Time Machine' },
+  { path: '/team', icon: Users, label: 'Equipo' },
 ];
 
 interface SidebarProps {
