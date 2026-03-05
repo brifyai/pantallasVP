@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   History, TrendingUp, TrendingDown,
   Clock, CalendarDays, CloudRain, Trophy, Music, Zap, BarChart2,
-  Download, Hourglass, BrainCircuit, ChevronLeft, ChevronRight
+  Download, Hourglass, BrainCircuit, ChevronLeft, ChevronRight, Moon
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -610,10 +610,19 @@ export function TimeMachine() {
           <div className="flex items-center gap-4 mt-4 pt-4 border-t border-white/10">
             <span className="text-xs text-gray-400">Factores considerados:</span>
             <div className="flex items-center gap-2 text-xs">
-              <span className="px-2 py-1 rounded bg-fuchsia-500/20 text-fuchsia-400">📅 Festivos</span>
-              <span className="px-2 py-1 rounded bg-amber-500/20 text-amber-400">🌙 Fin de Semana</span>
-              <span className="px-2 py-1 rounded bg-cyan-500/20 text-cyan-400">📈 Estacionalidad</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400">
+              <CalendarDays size={14} strokeWidth={2.5} />
+              <span className="text-xs font-medium">Festivos</span>
             </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400">
+              <Moon size={14} strokeWidth={2.5} />
+              <span className="text-xs font-medium">Fin de Semana</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+              <TrendingUp size={14} strokeWidth={2.5} />
+              <span className="text-xs font-medium">Estacionalidad</span>
+            </div>
+          </div>
           </div>
         </motion.div>
 

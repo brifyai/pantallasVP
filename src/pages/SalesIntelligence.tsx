@@ -7,7 +7,12 @@ import {
   Zap, 
   MapPin, 
   Crosshair, 
-  FileText 
+  FileText,
+  BarChart3,
+  Target as TargetIcon,
+  Lightbulb,
+  TrendingUp as TrendingUpIcon,
+  Check
 } from 'lucide-react';
 import { SCREENS, BRANDS, PREMIUM_BRANDS } from '../data/mockData';
 import { cn } from '../utils/cn';
@@ -22,9 +27,24 @@ import {
   Legend 
 } from 'recharts';
 
+interface ProposalSection {
+  title: string;
+  content?: string;
+  items?: string[];
+}
+
+interface Proposal {
+  diagnosis: ProposalSection;
+  opportunity: ProposalSection;
+  recommendation: ProposalSection;
+  projection: ProposalSection;
+}
+
 export function SalesIntelligence() {
   const [targetAudience, setTargetAudience] = useState('premium');
   const [selectedBrand, setSelectedBrand] = useState(PREMIUM_BRANDS[0]);
+  const [showProposal, setShowProposal] = useState(false);
+  const [generatedProposal, setGeneratedProposal] = useState<Proposal | null>(null);
   
   // Dropdown 1: Audience Match
   const [isAudienceOpen, setIsAudienceOpen] = useState(false);
@@ -164,6 +184,103 @@ export function SalesIntelligence() {
   
   const competitors = getCompetitors();
   
+  // Generar propuesta de valor
+  const handleGenerateProposal = () => {
+    const proposals: Record<string, Proposal> = {
+      premium: {
+        diagnosis: {
+          title: 'Diagnóstico de Audiencia Premium',
+          content: 'Nuestros sensores detectan una concentración del <strong>35% de vehículos premium</strong> (BMW, Mercedes-Benz, Audi) en las pantallas de Las Condes y Vitacura, con un valor promedio de mercado superior a UF 2.500.'
+        },
+        opportunity: {
+          title: 'Oportunidad Identificada',
+          items: [
+            'Horario peak: <strong>17:00 - 20:00 hrs</strong> con mayor concentración ABC1',
+            'Las Condes registra <strong>2.340 vehículos premium/día</strong>',
+            'Vitacura presenta <strong>42% de SUVs premium</strong> sobre el promedio'
+          ]
+        },
+        recommendation: {
+          title: 'Recomendación Estratégica',
+          content: 'Pautar en <strong>Pantalla Las Condes (Av. Apoquindo 12.450)</strong> y <strong>Pantalla Vitacura (Los Militares 4.890)</strong> durante el bloque tarde (15:00-21:00 hrs). Esta combinación alcanza al <strong>78% de tu audiencia objetivo</strong> con un CPM estimado de $3.200.'
+        },
+        projection: {
+          title: 'Proyección de Impacto',
+          content: 'Esperamos <strong>156.000 impresiones semanales</strong> con un 34% de recordación de marca y un incremento del 12% en tráfico web desde zonas objetivo.'
+        }
+      },
+      family: {
+        diagnosis: {
+          title: 'Diagnóstico de Audiencia Familiar',
+          content: 'Identificamos un patrón consistente de <strong>vehículos SUV y familiares</strong> en corredores de Maipú, La Florida y Puente Alto, con picos sincronizados con horarios escolares (07:00-08:30 y 15:30-17:00 hrs).'
+        },
+        opportunity: {
+          title: 'Oportunidad Identificada',
+          items: [
+            'Maipú concentra <strong>4.120 SUVs/día</strong> en rutas cercanas a colegios',
+            'La Florida registra <strong>67% de vehículos con sistema de anclaje infantil</strong>',
+            'Horario de mayor engagement: <strong>16:00 - 18:00 hrs</strong>'
+          ]
+        },
+        recommendation: {
+          title: 'Recomendación Estratégica',
+          content: 'Activar <strong>Pantalla Maipú (Av. Pajaritos 2.890)</strong> y <strong>Pantalla La Florida (Vicuña Mackenna 8.450)</strong> en bloques mañana y tarde. Mensaje enfocado en seguridad, espacio y conectividad familiar.'
+        },
+        projection: {
+          title: 'Proyección de Impacto',
+          content: 'Proyectamos <strong>234.000 impresiones semanales</strong> con 41% de recordación y un incremento del 18% en visitas a puntos de venta en zonas objetivo.'
+        }
+      },
+      young: {
+        diagnosis: {
+          title: 'Diagnóstico de Audiencia Joven Profesional',
+          content: 'Detectamos alta densidad de <strong>vehículos compactos y hatchbacks</strong> (2018+) en Providencia, Ñuñoa y Santiago Centro, correlacionado con zonas universitarias y de oficinas tech.'
+        },
+        opportunity: {
+          title: 'Oportunidad Identificada',
+          items: [
+            'Providencia registra <strong>3.890 vehículos 2020+</strong> en horario 08:00-10:00 hrs',
+            'Ñuñoa presenta <strong>52% de conductores 25-35 años</strong>',
+            'Santiago Centro concentra tráfico universitario: <strong>12.400 vehículos/día</strong>'
+          ]
+        },
+        recommendation: {
+          title: 'Recomendación Estratégica',
+          content: 'Pautar en <strong>Pantalla Providencia (Pedro de Valdivia 1.670)</strong> y <strong>Pantalla Ñuñoa (Irarrázaval 3.450)</strong> durante bloques de commuting. Mensaje enfocado en tecnología, diseño y sustentabilidad.'
+        },
+        projection: {
+          title: 'Proyección de Impacto',
+          content: 'Esperamos <strong>189.000 impresiones semanales</strong> con 38% de recordación y un 24% de incremento en engagement digital (QR/scans).'
+        }
+      },
+      massive: {
+        diagnosis: {
+          title: 'Diagnóstico de Audiencia Masiva',
+          content: 'Nuestras pantallas en ejes estratégicos de Santiago registran un flujo combinado de <strong>89.000 vehículos/día</strong>, con distribución equilibrada en segmentos y horarios extendidos.'
+        },
+        opportunity: {
+          title: 'Oportunidad Identificada',
+          items: [
+            'Costanera Norte / Vespucio: <strong>34.200 vehículos/día</strong>',
+            'Eje Norte-Sur: <strong>28.900 vehículos/día</strong>',
+            'Horario de máximo reach: <strong>07:30 - 09:30 y 17:30 - 19:30 hrs</strong>'
+          ]
+        },
+        recommendation: {
+          title: 'Recomendación Estratégica',
+          content: 'Activar paquete masivo en <strong>5 pantallas de alto flujo</strong> (Las Condes, Providencia, Santiago Centro, Maipú, La Florida) con rotación 24hrs. Ideal para lanzamientos y campañas de awareness.'
+        },
+        projection: {
+          title: 'Proyección de Impacto',
+          content: 'Proyectamos <strong>623.000 impresiones semanales</strong> con un CPM de $1.800 y reach estimado del 34% en RM.'
+        }
+      }
+    };
+
+    setGeneratedProposal(proposals[targetAudience] || proposals.premium);
+    setShowProposal(true);
+  };
+
   const competitorData = [
     {
       screen: 'Las Condes',
@@ -190,6 +307,10 @@ export function SalesIntelligence() {
       [competitors[1]]: Math.floor(Math.random() * 160) + 70,
     }
   ];
+
+  const getProposalText = (proposal: Proposal) => {
+    return `${proposal.diagnosis.title}: ${proposal.diagnosis.content}\n\n${proposal.opportunity.title}:\n${proposal.opportunity.items?.join('\n')}\n\n${proposal.recommendation.title}: ${proposal.recommendation.content}\n\n${proposal.projection.title}: ${proposal.projection.content}`;
+  };
 
   return (
     <div className="space-y-6">
@@ -255,7 +376,6 @@ export function SalesIntelligence() {
 
           <div className="mb-6" ref={audienceRef}>
             <label className="block text-sm font-medium text-gray-400 mb-2">Selecciona Perfil de Audiencia</label>
-            {/* Custom Dropdown Button */}
             <div
               onClick={() => setIsAudienceOpen(!isAudienceOpen)}
               className="w-full bg-navy-950 border border-white/10 rounded-lg px-4 py-3 text-white cursor-pointer flex items-center justify-between transition-all hover:border-magenta-500/50"
@@ -271,7 +391,6 @@ export function SalesIntelligence() {
               </motion.div>
             </div>
             
-            {/* Dropdown Options - Using Portal */}
             {isAudienceOpen && createPortal(
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -345,9 +464,133 @@ export function SalesIntelligence() {
             ))}
           </div>
           
-          <button className="w-full mt-6 py-3 bg-magenta-500 hover:bg-magenta-600 text-white font-medium rounded-lg transition-colors shadow-[0_0_15px_rgba(255,0,229,0.3)]">
+          <button 
+            onClick={handleGenerateProposal}
+            className="w-full mt-6 py-3 bg-magenta-500 hover:bg-magenta-600 text-white font-medium rounded-lg transition-colors shadow-[0_0_15px_rgba(255,0,229,0.3)] flex items-center justify-center gap-2"
+          >
+            <Zap className="w-4 h-4" />
             Generar Propuesta de Valor
           </button>
+
+          {/* Modal de Propuesta Generada */}
+          {showProposal && generatedProposal && typeof document !== 'undefined' && createPortal(
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99998] flex items-center justify-center p-4"
+              onClick={() => setShowProposal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.9, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[#0a0a1a] border border-white/20 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-magenta-500/20 rounded-xl">
+                      <FileText className="w-6 h-6 text-magenta-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Propuesta de Valor</h3>
+                      <p className="text-xs text-gray-400">Generada con IA basada en datos de audiencia</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowProposal(false)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="prose prose-invert max-w-none">
+                  <div className="bg-magenta-500/10 border border-magenta-500/20 rounded-xl p-4 mb-6">
+                    <p className="text-sm text-gray-300 mb-2">Audiencia Seleccionada:</p>
+                    <p className="text-lg font-semibold text-magenta-400">
+                      {audienceOptions.find(o => o.value === targetAudience)?.label}
+                    </p>
+                  </div>
+
+                  <div className="space-y-5">
+                    {/* Diagnóstico */}
+                    <div className="bg-navy-950/50 border border-white/10 rounded-xl p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                          <BarChart3 className="w-5 h-5 text-cyan-400" />
+                        </div>
+                        <h4 className="text-white font-semibold">{generatedProposal.diagnosis.title}</h4>
+                      </div>
+                      <p className="text-sm text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: generatedProposal.diagnosis.content || '' }} />
+                    </div>
+
+                    {/* Oportunidad */}
+                    <div className="bg-navy-950/50 border border-white/10 rounded-xl p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2.5 rounded-lg bg-magenta-500/10 border border-magenta-500/20">
+                          <TargetIcon className="w-5 h-5 text-magenta-400" />
+                        </div>
+                        <h4 className="text-white font-semibold">{generatedProposal.opportunity.title}</h4>
+                      </div>
+                      <ul className="space-y-2">
+                        {generatedProposal.opportunity.items?.map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2.5 text-sm text-gray-300">
+                            <div className="w-1.5 h-1.5 rounded-full bg-magenta-400 mt-2 flex-shrink-0" />
+                            <span dangerouslySetInnerHTML={{ __html: item }} />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Recomendación */}
+                    <div className="bg-navy-950/50 border border-white/10 rounded-xl p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                          <Lightbulb className="w-5 h-5 text-amber-400" />
+                        </div>
+                        <h4 className="text-white font-semibold">{generatedProposal.recommendation.title}</h4>
+                      </div>
+                      <p className="text-sm text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: generatedProposal.recommendation.content || '' }} />
+                    </div>
+
+                    {/* Proyección */}
+                    <div className="bg-navy-950/50 border border-white/10 rounded-xl p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                          <TrendingUpIcon className="w-5 h-5 text-emerald-400" />
+                        </div>
+                        <h4 className="text-white font-semibold">{generatedProposal.projection.title}</h4>
+                      </div>
+                      <p className="text-sm text-gray-300 leading-relaxed" dangerouslySetInnerHTML={{ __html: generatedProposal.projection.content || '' }} />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 mt-8 pt-6 border-t border-white/10">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(getProposalText(generatedProposal));
+                      }}
+                      className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Check className="w-4 h-4" />
+                      Copiar Propuesta
+                    </button>
+                    <button
+                      onClick={() => setShowProposal(false)}
+                      className="flex-1 py-3 bg-magenta-500 hover:bg-magenta-600 text-white font-medium rounded-lg transition-colors"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>,
+            document.body
+          )}
         </motion.div>
 
         {/* Competitor Tracker */}
@@ -369,7 +612,6 @@ export function SalesIntelligence() {
 
           <div className="mb-6" ref={competitorRef}>
             <label className="block text-sm font-medium text-gray-400 mb-2">Marca del Anunciante</label>
-            {/* Custom Dropdown Button */}
             <div
               onClick={() => setIsCompetitorOpen(!isCompetitorOpen)}
               className="w-full bg-navy-950 border border-white/10 rounded-lg px-4 py-3 text-white cursor-pointer flex items-center justify-between transition-all hover:border-cyan-500/50"
@@ -385,7 +627,6 @@ export function SalesIntelligence() {
               </motion.div>
             </div>
             
-            {/* Dropdown Options - Using Portal */}
             {isCompetitorOpen && createPortal(
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
