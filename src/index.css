@@ -88,7 +88,7 @@ body {
 .mobile-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 45;
   opacity: 0;
   visibility: hidden;
