@@ -88,9 +88,7 @@ body {
 .mobile-sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.8);
   z-index: 45;
   opacity: 0;
   visibility: hidden;
@@ -111,9 +109,7 @@ body {
   bottom: 0;
   width: 280px;
   max-width: 85vw;
-  background: rgba(10, 10, 26, 0.98);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgb(10, 10, 26);
   z-index: 50;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
