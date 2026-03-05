@@ -86,7 +86,8 @@ export function Header({ onMenuClick }: HeaderProps) {
       {/* Mobile Menu Button */}
       <button
         onClick={onMenuClick}
-        className="md:hidden p-2 text-gray-400 hover:text-white transition-colors mr-2"
+        className="md:hidden p-2 text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.1)] rounded-lg transition-all mr-2"
+        aria-label="Abrir menú"
       >
         <Menu size={24} />
       </button>

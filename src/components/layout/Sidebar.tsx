@@ -31,7 +31,7 @@ interface SidebarProps {
 export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: SidebarProps) {
   const sidebarClasses = isMobileOpen
     ? 'mobile-sidebar active'
-    : 'w-64 h-screen border-r border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl flex flex-col justify-between fixed left-0 top-0 z-50';
+    : 'hidden md:flex w-64 h-screen border-r border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl flex-col justify-between fixed left-0 top-0 z-50';
 
   return (
     <div className={sidebarClasses}>
