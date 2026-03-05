@@ -62,7 +62,7 @@ export function Layout() {
       <div className="relative z-10 flex w-full h-screen">
         <Sidebar
           activeView={activeView}
-          isMobile={isMobileSidebarOpen}
+          isMobileOpen={isMobileSidebarOpen}
           onCloseMobile={toggleSidebar}
         />
         <div className="flex-1 flex flex-col relative h-full w-full">

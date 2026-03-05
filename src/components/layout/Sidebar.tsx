@@ -24,12 +24,12 @@ const NAV_ITEMS = [
 
 interface SidebarProps {
   activeView: string;
-  isMobile?: boolean;
+  isMobileOpen?: boolean;
   onCloseMobile?: () => void;
 }
 
-export function Sidebar({ activeView, isMobile = false, onCloseMobile }: SidebarProps) {
-  const sidebarClasses = isMobile
+export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: SidebarProps) {
+  const sidebarClasses = isMobileOpen
     ? 'mobile-sidebar active'
     : 'w-64 h-screen border-r border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,26,0.4)] backdrop-blur-xl flex flex-col justify-between fixed left-0 top-0 z-50';
 
@@ -48,7 +48,7 @@ export function Sidebar({ activeView, isMobile = false, onCloseMobile }: Sidebar
               <span className="text-[10px] text-[rgb(var(--accent-cyan))] font-bold uppercase tracking-[0.3em] mt-0.5">Analytics</span>
             </div>
           </div>
-          {isMobile && (
+          {isMobileOpen && (
             <button
               onClick={onCloseMobile}
               className="p-2 text-gray-400 hover:text-white transition-colors"
@@ -65,7 +65,7 @@ export function Sidebar({ activeView, isMobile = false, onCloseMobile }: Sidebar
               <NavLink
                 to={item.path}
                 key={item.path}
-                onClick={isMobile ? onCloseMobile : undefined}
+                onClick={isMobileOpen ? onCloseMobile : undefined}
                 className={({ isActive }) =>
                   `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
                     isActive
@@ -89,7 +89,7 @@ export function Sidebar({ activeView, isMobile = false, onCloseMobile }: Sidebar
       <div className="p-4 border-t border-[rgba(255,255,255,0.05)] space-y-2">
         <NavLink
           to="/settings"
-          onClick={isMobile ? onCloseMobile : undefined}
+          onClick={isMobileOpen ? onCloseMobile : undefined}
           className={({ isActive }) =>
             `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
               isActive
