@@ -469,6 +469,33 @@ const formatCLP = (amount: number) => {
   }).format(amount);
 };
 
+// Componente KPI Box
+function KPIBox({ title, value, icon: Icon, color = "text-cyan-400", iconColor }: { 
+  title: string; 
+  value: string | number; 
+  icon?: any; 
+  color?: string;
+  iconColor?: string;
+}) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-navy-900/50 backdrop-blur-md p-5 rounded-xl border border-white/10 flex items-center gap-4"
+    >
+      {Icon && (
+        <div className={cn("p-3 rounded-xl bg-white/5", iconColor || color)}>
+          <Icon className="w-6 h-6" />
+        </div>
+      )}
+      <div>
+        <p className="text-sm text-slate-400 font-medium">{title}</p>
+        <p className="text-2xl font-bold text-white mt-1">{value}</p>
+      </div>
+    </motion.div>
+  );
+}
+
 // Componente de tarjeta de miembro del equipo
 function TeamMemberCard({ member, isExpanded, onToggle }: { member: Vendedor; isExpanded: boolean; onToggle: () => void }) {
   const porcentajeMeta = member.metaMensual > 0 ? (member.ventasActuales / member.metaMensual) * 100 : 0;
@@ -477,105 +504,95 @@ function TeamMemberCard({ member, isExpanded, onToggle }: { member: Vendedor; is
   return (
     <motion.div
       layout
-      className={cn(
-        "bg-navy-950/50 border rounded-xl overflow-hidden transition-all",
-        member.cargo === 'Director' ? "border-amber-500/30" :
-        member.cargo === 'Supervisor' ? "border-purple-500/30" : "border-white/10"
-      )}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-navy-900/50 backdrop-blur-md p-5 rounded-xl border border-white/10"
     >
-      {/* Header de la tarjeta */}
-      <div onClick={onToggle} className="p-4 cursor-pointer hover:bg-white/5 transition-colors">
-        <div className="flex items-center gap-4">
-          {/* Avatar */}
-          <div className={cn(
-            "w-14 h-14 rounded-xl flex items-center justify-center text-3xl",
-            member.cargo === 'Director' ? "bg-amber-500/20 border border-amber-500/30" :
-            member.cargo === 'Supervisor' ? "bg-purple-500/20 border border-purple-500/30" : "bg-cyan-500/20 border border-cyan-500/30"
-          )}>
-            {member.avatar}
+      <div className="flex items-center gap-4">
+        {/* Avatar */}
+        <div className={cn(
+          "w-14 h-14 rounded-xl flex items-center justify-center text-3xl",
+          member.cargo === 'Director' ? "bg-amber-500/20" :
+          member.cargo === 'Supervisor' ? "bg-purple-500/20" : "bg-cyan-500/20"
+        )}>
+          {member.avatar}
+        </div>
+
+        {/* Información principal */}
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-white">{member.nombre}</h3>
+            {member.cargo === 'Director' && <Award className="w-4 h-4 text-amber-400" />}
+            {member.cargo === 'Supervisor' && <Star className="w-4 h-4 text-purple-400" />}
           </div>
-
-          {/* Información principal */}
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-white">{member.nombre}</h3>
-              {member.cargo === 'Director' && <Award className="w-4 h-4 text-amber-400" />}
-              {member.cargo === 'Supervisor' && <Star className="w-4 h-4 text-purple-400" />}
-            </div>
-            <p className="text-sm text-gray-400">{member.cargo} | {member.especialidad}</p>
-            <div className="flex items-center gap-4 mt-1">
-              <span className="text-xs text-gray-500 flex items-center gap-1">
-                <MapPin className="w-3 h-3" /> {member.region}
-              </span>
-              <span className="text-xs text-gray-500 flex items-center gap-1">
-                <Mail className="w-3 h-3" /> {member.email}
-              </span>
-            </div>
-          </div>
-
-          {/* Meta y progreso (solo vendedores) */}
-          {member.cargo === 'Vendedor' && (
-            <div className="text-right">
-              <p className="text-xs text-gray-400 mb-1">Meta Mensual</p>
-              <p className="text-lg font-bold text-white">{formatCLP(member.metaMensual)}</p>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      estadoMeta === 'success' ? "bg-emerald-500" :
-                      estadoMeta === 'warning' ? "bg-amber-500" : "bg-rose-500"
-                    )}
-                    style={{ width: `${Math.min(porcentajeMeta, 100)}%` }}
-                  />
-                </div>
-                <span className={cn(
-                  "text-xs font-medium",
-                  estadoMeta === 'success' ? "text-emerald-400" :
-                  estadoMeta === 'warning' ? "text-amber-400" : "text-rose-400"
-                )}>
-                  {porcentajeMeta.toFixed(0)}%
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 mt-0.5">{formatCLP(member.ventasActuales)} vendido</p>
-            </div>
-          )}
-
-          {/* Icono expandir */}
-          <div className="p-2">
-            {isExpanded ? <ChevronDown className="w-5 h-5 text-gray-400" /> : <ChevronRight className="w-5 h-5 text-gray-400" />}
+          <p className="text-sm text-slate-400">{member.cargo} | {member.especialidad}</p>
+          <div className="flex items-center gap-4 mt-1">
+            <span className="text-xs text-slate-500 flex items-center gap-1">
+              <MapPin className="w-3 h-3" /> {member.region}
+            </span>
+            <span className="text-xs text-slate-500 flex items-center gap-1">
+              <Mail className="w-3 h-3" /> {member.email}
+            </span>
           </div>
         </div>
+
+        {/* Meta y progreso (solo vendedores) */}
+        {member.cargo === 'Vendedor' && (
+          <div className="text-right">
+            <p className="text-xs text-slate-400 mb-1">Meta Mensual</p>
+            <p className="text-lg font-bold text-white">{formatCLP(member.metaMensual)}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <div className="w-24 h-2 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className={cn(
+                    "h-full rounded-full transition-all",
+                    estadoMeta === 'success' ? "bg-emerald-500" :
+                    estadoMeta === 'warning' ? "bg-amber-500" : "bg-rose-500"
+                  )}
+                  style={{ width: `${Math.min(porcentajeMeta, 100)}%` }}
+                />
+              </div>
+              <span className={cn(
+                "text-xs font-medium",
+                estadoMeta === 'success' ? "text-emerald-400" :
+                estadoMeta === 'warning' ? "text-amber-400" : "text-rose-400"
+              )}>
+                {porcentajeMeta.toFixed(0)}%
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">{formatCLP(member.ventasActuales)} vendido</p>
+          </div>
+        )}
+
+        {/* Icono expandir */}
+        <button onClick={onToggle} className="p-2 hover:bg-white/5 rounded-lg transition-colors">
+          {isExpanded ? <ChevronDown className="w-5 h-5 text-gray-400" /> : <ChevronRight className="w-5 h-5 text-gray-400" />}
+        </button>
       </div>
 
       {/* Contenido expandido */}
       {isExpanded && member.cargo === 'Vendedor' && (
-        <div className="px-4 pb-4 border-t border-white/10">
-          {/* Clientes */}
-          <div className="mt-4">
-            <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Briefcase className="w-4 h-4 text-cyan-400" />
-              Cartera de Clientes ({member.clientes.length})
-            </h4>
-            <div className="space-y-3">
-              {member.clientes.map((cliente) => (
-                <ClienteCard key={cliente.id} cliente={cliente} />
-              ))}
-            </div>
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <h4 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-cyan-400" />
+            Cartera de Clientes ({member.clientes.length})
+          </h4>
+          <div className="space-y-3">
+            {member.clientes.map((cliente) => (
+              <ClienteCard key={cliente.id} cliente={cliente} />
+            ))}
           </div>
         </div>
       )}
 
       {/* Mensaje para Director/Supervisor */}
       {isExpanded && member.cargo !== 'Vendedor' && (
-        <div className="px-4 pb-4 border-t border-white/10">
-          <div className="mt-4 p-4 bg-navy-900/50 rounded-xl border border-white/5">
-            <p className="text-sm text-gray-300">
-              {member.cargo === 'Director' 
-                ? 'Responsable de la estrategia comercial global y relaciones con clientes corporativos clave.'
-                : 'Supervisa el desempeño del equipo de ventas y coordina las operaciones diarias.'}
-            </p>
-          </div>
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <p className="text-sm text-slate-300">
+            {member.cargo === 'Director' 
+              ? 'Responsable de la estrategia comercial global y relaciones con clientes corporativos clave.'
+              : 'Supervisa el desempeño del equipo de ventas y coordina las operaciones diarias.'}
+          </p>
         </div>
       )}
     </motion.div>
@@ -587,57 +604,55 @@ function ClienteCard({ cliente }: { cliente: Cliente }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-navy-900/50 border border-white/5 rounded-xl overflow-hidden">
-      <div className="p-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h5 className="font-medium text-white">{cliente.nombre}</h5>
-              <span className={cn(
-                "px-2 py-0.5 rounded-full text-xs",
-                cliente.estado === 'activo' ? "bg-emerald-500/20 text-emerald-400" :
-                cliente.estado === 'prospecto' ? "bg-amber-500/20 text-amber-400" : "bg-gray-500/20 text-gray-400"
-              )}>
-                {cliente.estado}
-              </span>
-            </div>
-            <p className="text-xs text-gray-400 mt-0.5">{cliente.rubro} | {formatCLP(cliente.inversion)}</p>
-          </div>
-          <button onClick={() => setExpanded(!expanded)} className="p-1">
-            {expanded ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
-          </button>
-        </div>
-
-        {/* Pantallas contratadas */}
-        <div className="mt-2 flex flex-wrap gap-1">
-          {cliente.pantallas.map((pantalla, idx) => (
-            <span key={idx} className="px-2 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded text-xs text-cyan-400">
-              {pantalla}
+    <div className="bg-navy-900/30 border border-white/5 rounded-xl p-4">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h5 className="font-medium text-white">{cliente.nombre}</h5>
+            <span className={cn(
+              "px-2 py-0.5 rounded-full text-xs",
+              cliente.estado === 'activo' ? "bg-emerald-500/20 text-emerald-400" :
+              cliente.estado === 'prospecto' ? "bg-amber-500/20 text-amber-400" : "bg-gray-500/20 text-gray-400"
+            )}>
+              {cliente.estado}
             </span>
-          ))}
+          </div>
+          <p className="text-xs text-slate-400 mt-0.5">{cliente.rubro} | {formatCLP(cliente.inversion)}</p>
         </div>
+        <button onClick={() => setExpanded(!expanded)} className="p-1 hover:bg-white/5 rounded transition-colors">
+          {expanded ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+        </button>
+      </div>
 
-        {/* Contacto */}
-        <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-          <span className="flex items-center gap-1">
-            <Phone className="w-3 h-3" /> {cliente.contacto.nombre}
+      {/* Pantallas contratadas */}
+      <div className="mt-2 flex flex-wrap gap-1">
+        {cliente.pantallas.map((pantalla, idx) => (
+          <span key={idx} className="px-2 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded text-xs text-cyan-400">
+            {pantalla}
           </span>
-          <span className="flex items-center gap-1">
-            <Mail className="w-3 h-3" /> {cliente.contacto.email}
-          </span>
-        </div>
+        ))}
+      </div>
+
+      {/* Contacto */}
+      <div className="mt-2 flex items-center gap-4 text-xs text-slate-500">
+        <span className="flex items-center gap-1">
+          <Phone className="w-3 h-3" /> {cliente.contacto.nombre}
+        </span>
+        <span className="flex items-center gap-1">
+          <Mail className="w-3 h-3" /> {cliente.contacto.email}
+        </span>
       </div>
 
       {/* Historial expandido */}
       {expanded && (
-        <div className="px-3 pb-3 border-t border-white/5">
-          <h6 className="text-xs font-semibold text-gray-400 mt-3 mb-2">Historial de Campañas</h6>
+        <div className="mt-3 pt-3 border-t border-white/5">
+          <h6 className="text-xs font-semibold text-slate-400 mb-2">Historial de Campañas</h6>
           <div className="space-y-2">
             {cliente.historial.map((campana, idx) => (
-              <div key={idx} className="p-2 bg-navy-950/50 rounded-lg">
+              <div key={idx} className="p-2 bg-navy-900/50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-white">{campana.campana}</span>
-                  <span className="text-xs text-gray-500">{campana.periodo}</span>
+                  <span className="text-xs text-slate-500">{campana.periodo}</span>
                 </div>
                 <div className="flex items-center justify-between mt-1">
                   <span className="text-xs text-cyan-400">{formatCLP(campana.inversion)}</span>
@@ -656,24 +671,18 @@ function ClienteCard({ cliente }: { cliente: Cliente }) {
 function IARecomendacionCard({ recomendacion }: { recomendacion: typeof RECOMENDACIONES_IA[0] }) {
   return (
     <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.01 }}
-      className={cn(
-        "bg-navy-950/50 border rounded-xl p-4 transition-all",
-        recomendacion.prioridad === 'alta' ? "border-rose-500/30" :
-        recomendacion.prioridad === 'media' ? "border-amber-500/30" : "border-blue-500/30"
-      )}
+      className="bg-navy-900/50 backdrop-blur-md p-5 rounded-xl border border-white/10"
     >
       <div className="flex items-start gap-3">
         <div className={cn(
-          "p-2 rounded-lg",
-          recomendacion.prioridad === 'alta' ? "bg-rose-500/20" :
-          recomendacion.prioridad === 'media' ? "bg-amber-500/20" : "bg-blue-500/20"
+          "p-3 rounded-xl bg-white/5",
+          recomendacion.prioridad === 'alta' ? "text-rose-400" :
+          recomendacion.prioridad === 'media' ? "text-amber-400" : "text-blue-400"
         )}>
-          <Brain className={cn(
-            "w-5 h-5",
-            recomendacion.prioridad === 'alta' ? "text-rose-400" :
-            recomendacion.prioridad === 'media' ? "text-amber-400" : "text-blue-400"
-          )} />
+          <Brain className="w-6 h-6" />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
@@ -686,16 +695,16 @@ function IARecomendacionCard({ recomendacion }: { recomendacion: typeof RECOMEND
               {recomendacion.tipo}
             </span>
           </div>
-          <p className="text-sm text-gray-400 mt-1">{recomendacion.descripcion}</p>
+          <p className="text-sm text-slate-400 mt-1">{recomendacion.descripcion}</p>
           
-          <div className="grid grid-cols-2 gap-3 mt-3">
-            <div className="p-2 bg-navy-900/50 rounded-lg">
-              <p className="text-xs text-gray-500">Rubro Sugerido</p>
-              <p className="text-sm text-cyan-400 font-medium">{recomendacion.rubroSugerido}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+            <div className="p-3 bg-navy-900/30 rounded-lg border border-white/5">
+              <p className="text-xs text-slate-500">Rubro Sugerido</p>
+              <p className="text-sm text-cyan-400 font-medium mt-1">{recomendacion.rubroSugerido}</p>
             </div>
-            <div className="p-2 bg-navy-900/50 rounded-lg">
-              <p className="text-xs text-gray-500">Marca Objetivo</p>
-              <p className="text-sm text-magenta-400 font-medium">{recomendacion.marcaSugerida}</p>
+            <div className="p-3 bg-navy-900/30 rounded-lg border border-white/5">
+              <p className="text-xs text-slate-500">Marca Objetivo</p>
+              <p className="text-sm text-magenta-400 font-medium mt-1">{recomendacion.marcaSugerida}</p>
             </div>
           </div>
 
@@ -704,7 +713,7 @@ function IARecomendacionCard({ recomendacion }: { recomendacion: typeof RECOMEND
               <Sparkles className="w-4 h-4 text-cyan-400" />
               <p className="text-xs font-semibold text-cyan-400">Análisis de IA</p>
             </div>
-            <p className="text-sm text-gray-300">{recomendacion.razonamiento}</p>
+            <p className="text-sm text-slate-300 mt-1">{recomendacion.razonamiento}</p>
           </div>
 
           <div className="flex items-center justify-between mt-3">
@@ -712,7 +721,7 @@ function IARecomendacionCard({ recomendacion }: { recomendacion: typeof RECOMEND
               <DollarSign className="w-4 h-4 text-emerald-400" />
               <span className="text-sm font-bold text-white">{formatCLP(recomendacion.inversionEstimada)}</span>
             </div>
-            <button className="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+            <button className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
               <Zap className="w-4 h-4" />
               {recomendacion.accion}
             </button>
@@ -735,24 +744,47 @@ export function Team() {
   const porcentajeEquipo = (totalVentas / totalMeta) * 100;
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-4 md:space-y-6 relative z-10 p-6">
-      {/* Header Section */}
-      <div className="mb-4 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2 drop-shadow-md flex items-center gap-3">
-          <Users className="w-7 h-7 text-cyan-400" />
-          Equipo de Ventas
-        </h1>
-        <p className="text-gray-400 text-sm md:text-base">Organigrama, metas y recomendaciones de IA</p>
+    <div className="space-y-6 pb-20">
+      {/* Header */}
+      <div className="bg-navy-900/50 backdrop-blur-md p-6 rounded-xl border border-white/10">
+        <h1 className="text-2xl font-bold text-white mb-1">Equipo de Ventas</h1>
+        <p className="text-slate-400 text-sm">Organigrama, metas y recomendaciones de IA</p>
       </div>
+      {/* KPIs del Equipo */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <KPIBox title="Meta Total Equipo" value={formatCLP(totalMeta)} />
+        <KPIBox title="Ventas Actuales" value={formatCLP(totalVentas)} color="text-emerald-400" />
+        <KPIBox 
+          title="Cumplimiento" 
+          value={`${porcentajeEquipo.toFixed(1)}%`} 
+          icon={porcentajeEquipo >= 100 ? ArrowUpRight : ArrowDownRight}
+          iconColor={porcentajeEquipo >= 100 ? "text-emerald-400" : "text-amber-400"}
+        />
+        <KPIBox title="Vendedores Activos" value={vendedores.length.toString()} />
+      </div>
+
+      {/* Barra de progreso del equipo */}
+      <div className="bg-navy-900/50 backdrop-blur-md p-5 rounded-xl border border-white/10">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-sm text-slate-400 font-medium">Progreso del Equipo</p>
+          <p className="text-sm text-slate-400">{formatCLP(totalMeta - totalVentas)} restante</p>
+        </div>
+        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-cyan-500 to-magenta-500 rounded-full transition-all"
+            style={{ width: `${Math.min(porcentajeEquipo, 100)}%` }}
+          />
+        </div>
+      </div>
+
       {/* Tabs */}
-      <div className="flex items-center justify-between">
-        <div></div>
-        <div className="flex bg-navy-950/50 rounded-xl p-1 border border-white/10">
+      <div className="flex justify-end">
+        <div className="flex bg-navy-900/50 backdrop-blur-md rounded-xl p-1 border border-white/10">
           <button
             onClick={() => setActiveTab('organigrama')}
             className={cn(
               "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-              activeTab === 'organigrama' ? "bg-cyan-500 text-white" : "text-gray-400 hover:text-white"
+              activeTab === 'organigrama' ? "bg-cyan-500 text-white" : "text-slate-400 hover:text-white"
             )}
           >
             Organigrama
@@ -761,7 +793,7 @@ export function Team() {
             onClick={() => setActiveTab('recomendaciones')}
             className={cn(
               "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-              activeTab === 'recomendaciones' ? "bg-magenta-500 text-white" : "text-gray-400 hover:text-white"
+              activeTab === 'recomendaciones' ? "bg-magenta-500 text-white" : "text-slate-400 hover:text-white"
             )}
           >
             <span className="flex items-center gap-2">
@@ -772,50 +804,9 @@ export function Team() {
         </div>
       </div>
 
-      {/* KPIs del Equipo */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-          <p className="text-xs text-gray-400">Meta Total Equipo</p>
-          <p className="text-xl font-bold text-white mt-1">{formatCLP(totalMeta)}</p>
-        </div>
-        <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-          <p className="text-xs text-gray-400">Ventas Actuales</p>
-          <p className="text-xl font-bold text-emerald-400 mt-1">{formatCLP(totalVentas)}</p>
-        </div>
-        <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-          <p className="text-xs text-gray-400">Cumplimiento</p>
-          <div className="flex items-center gap-2 mt-1">
-            <p className="text-xl font-bold text-white">{porcentajeEquipo.toFixed(1)}%</p>
-            {porcentajeEquipo >= 100 ? (
-              <ArrowUpRight className="w-5 h-5 text-emerald-400" />
-            ) : (
-              <ArrowDownRight className="w-5 h-5 text-amber-400" />
-            )}
-          </div>
-        </div>
-        <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-          <p className="text-xs text-gray-400">Vendedores Activos</p>
-          <p className="text-xl font-bold text-white mt-1">{vendedores.length}</p>
-        </div>
-      </div>
-
-      {/* Barra de progreso del equipo */}
-      <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-white">Progreso del Equipo</p>
-          <p className="text-sm text-gray-400">{formatCLP(totalMeta - totalVentas)} restante</p>
-        </div>
-        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-cyan-500 to-magenta-500 rounded-full transition-all"
-            style={{ width: `${Math.min(porcentajeEquipo, 100)}%` }}
-          />
-        </div>
-      </div>
-
       {/* Contenido principal */}
       {activeTab === 'organigrama' ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Director */}
           <div>
             <h3 className="text-sm font-semibold text-amber-400 mb-3 flex items-center gap-2">
@@ -863,14 +854,14 @@ export function Team() {
       ) : (
         <div className="space-y-6">
           {/* Header de recomendaciones */}
-          <div className="bg-gradient-to-r from-cyan-500/10 to-magenta-500/10 border border-cyan-500/20 rounded-xl p-6">
+          <div className="bg-navy-900/50 backdrop-blur-md p-6 rounded-xl border border-white/10">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-xl bg-cyan-500/20 border border-cyan-500/30">
                 <Brain className="w-8 h-8 text-cyan-400" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-white">Recomendaciones de IA para Inventario No Vendido</h2>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-slate-400 text-sm mt-1">
                   Análisis predictivo basado en histórico de tráfico, comportamiento de marcas y tendencias del mercado
                 </p>
               </div>
@@ -878,7 +869,7 @@ export function Team() {
           </div>
 
           {/* Filtros de prioridad */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <span className="px-3 py-1 bg-rose-500/20 border border-rose-500/30 rounded-full text-xs text-rose-400">
               {RECOMENDACIONES_IA.filter(r => r.prioridad === 'alta').length} Prioridad Alta
             </span>
