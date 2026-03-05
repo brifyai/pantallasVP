@@ -63,6 +63,14 @@ interface IndustryProspect {
   insight: string;
   subRubros: { name: string; reason: string }[];
   priority: 'Alta' | 'Media' | 'Baja';
+  description: string;
+  marcasEjemplo: string[];
+  presupuestoPromedio: string;
+  estacionalidad: string;
+  kpisSugeridos: { label: string; value: string }[];
+  pantallasRecomendadas: string[];
+  horarioOptimo: string;
+  tipoMensaje: string;
 }
 
 export function SalesIntelligence() {
@@ -348,6 +356,19 @@ export function SalesIntelligence() {
       cpm: '$3.200',
       audience: '35% vehículos premium',
       insight: 'Alta concentración en Las Condes/Vitacura',
+      description: 'El sector automotriz representa una de las mayores oportunidades para publicidad OOH en Santiago. Nuestros sensores detectan diariamente más de 8.500 vehículos premium en las comunas de mayor poder adquisitivo, con picos de tráfico en horarios de commuting (07:00-09:00 y 17:00-20:00 hrs).',
+      marcasEjemplo: ['BMW', 'Mercedes-Benz', 'Audi', 'Volvo', 'Land Rover', 'Porsche'],
+      presupuestoPromedio: '$2.500.000 - $8.000.000 / mes',
+      estacionalidad: 'Marzo-Abril y Septiembre-Octubre (lanzamientos)',
+      horarioOptimo: '07:00-09:00 hrs (commuting AM) y 17:00-20:00 hrs (commuting PM)',
+      tipoMensaje: 'Exclusividad, tecnología, seguridad y estatus',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '156.000' },
+        { label: 'Frecuencia', value: '4.2' },
+        { label: 'CTR Estimado', value: '0.8%' },
+        { label: 'Conversión', value: '2.1%' }
+      ],
+      pantallasRecomendadas: ['Las Condes (Av. Apoquindo)', 'Vitacura (Los Militares)', 'La Dehesa'],
       subRubros: [
         { name: 'Concesionarios Premium', reason: 'Audiencia ABC1 detectada' },
         { name: 'Seguros de Automóviles', reason: 'Segmento premium busca cobertura' },
@@ -365,6 +386,19 @@ export function SalesIntelligence() {
       cpm: '$2.800',
       audience: '78% retención visual AM',
       insight: 'Profesionales 30-55 años en commuting',
+      description: 'El sector financiero encuentra en nuestras pantallas un canal efectivo para alcanzar a profesionales con alto poder adquisitivo. El 78% de retención visual en horario AM permite posicionar productos de inversión, créditos y seguros con alta recordación.',
+      marcasEjemplo: ['Banco Santander', 'Bci', 'Chile', 'Consorcio', 'Habitat', 'Cuprum'],
+      presupuestoPromedio: '$3.000.000 - $12.000.000 / mes',
+      estacionalidad: 'Enero-Febrero (campañas anuales) y Julio (semestre)',
+      horarioOptimo: '06:30-09:00 hrs (profesionales commuting) y 12:00-14:00 hrs (hora almuerzo)',
+      tipoMensaje: 'Confianza, seguridad, rentabilidad y beneficios exclusivos',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '234.000' },
+        { label: 'Frecuencia', value: '5.1' },
+        { label: 'CTR Estimado', value: '1.2%' },
+        { label: 'Conversión', value: '3.4%' }
+      ],
+      pantallasRecomendadas: ['Costanera Center', 'Sanhattan', 'Providencia (Pedro de Valdivia)'],
       subRubros: [
         { name: 'Bancos Premium', reason: 'Segmento ABC1 alto poder adquisitivo' },
         { name: 'AFP y Fondos', reason: 'Profesionales en planificación' },
@@ -382,6 +416,19 @@ export function SalesIntelligence() {
       cpm: '$2.100',
       audience: '42% SUVs familiares',
       insight: 'Familias ABC1 en Maipú/La Florida',
+      description: 'El sector salud y bienestar se beneficia de la alta concentración de familias en comunas como Maipú y La Florida. El 42% de SUVs familiares detectados representa un segmento con capacidad de pago y preocupación por salud preventiva.',
+      marcasEjemplo: ['Clínica Alemana', 'RedSalud', 'Cruz Verde', 'Salcobrand', 'Sportlife'],
+      presupuestoPromedio: '$1.500.000 - $5.000.000 / mes',
+      estacionalidad: 'Marzo (vuelta al cole) y Mayo (Día de la Madre)',
+      horarioOptimo: '08:00-10:00 hrs (rutina familiar) y 15:00-18:00 hrs (salida colegios)',
+      tipoMensaje: 'Cuidado, prevención, confianza y atención personalizada',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '189.000' },
+        { label: 'Frecuencia', value: '3.8' },
+        { label: 'CTR Estimado', value: '0.9%' },
+        { label: 'Conversión', value: '2.8%' }
+      ],
+      pantallasRecomendadas: ['Maipú (Av. Pajaritos)', 'La Florida (Vicuña Mackenna)', 'Puente Alto'],
       subRubros: [
         { name: 'Clínicas Privadas', reason: 'Familias segmento ABC1' },
         { name: 'Seguros Complementarios', reason: 'Profesionales con capacidad de pago' },
@@ -399,6 +446,19 @@ export function SalesIntelligence() {
       cpm: '$1.800',
       audience: '12.400 vehículos/día',
       insight: 'Zona universitaria Santiago Centro',
+      description: 'Santiago Centro concentra 12.400 vehículos/día en zona universitaria, con alta densidad de jóvenes 18-25 años y padres en búsqueda de educación superior. Ideal para campañas de captación en períodos de matrícula.',
+      marcasEjemplo: ['Universidad de Chile', 'PUC', 'U. de Santiago', 'Duoc UC', 'Inglés Fast Track'],
+      presupuestoPromedio: '$800.000 - $3.500.000 / mes',
+      estacionalidad: 'Octubre-Diciembre (matrículas) y Marzo-Abril (cursos)',
+      horarioOptimo: '09:00-11:00 hrs (padres) y 18:00-21:00 hrs (jóvenes)',
+      tipoMensaje: 'Oportunidad, futuro, empleabilidad y prestigio',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '145.000' },
+        { label: 'Frecuencia', value: '4.5' },
+        { label: 'CTR Estimado', value: '1.1%' },
+        { label: 'Conversión', value: '3.2%' }
+      ],
+      pantallasRecomendadas: ['Santiago Centro (Alameda)', 'Universidad de Chile', 'Estación Central'],
       subRubros: [
         { name: 'Universidades', reason: 'Zona universitaria detectada' },
         { name: 'Colegios Privados', reason: 'Familias en rutas escolares' },
@@ -416,6 +476,19 @@ export function SalesIntelligence() {
       cpm: '$1.800',
       audience: '89.000 vehículos/día',
       insight: 'Ejes estratégicos de Santiago',
+      description: 'Nuestras pantallas en ejes estratégicos de Santiago registran un flujo combinado de 89.000 vehículos/día, con distribución equilibrada en segmentos y horarios extendidos. Ideal para campañas de awareness y lanzamientos de productos.',
+      marcasEjemplo: ['Falabella', 'Ripley', 'Paris', 'Mercado Libre', 'Amazon', 'Cencosud'],
+      presupuestoPromedio: '$2.000.000 - $7.000.000 / mes',
+      estacionalidad: 'Noviembre-Enero (Fiestas) y Mayo (Día de la Madre)',
+      horarioOptimo: '10:00-20:00 hrs (compras fin de semana) y 17:00-21:00 hrs (after office)',
+      tipoMensaje: 'Variedad, conveniencia, ofertas exclusivas y experiencia de compra',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '312.000' },
+        { label: 'Frecuencia', value: '6.2' },
+        { label: 'CTR Estimado', value: '1.4%' },
+        { label: 'Conversión', value: '2.5%' }
+      ],
+      pantallasRecomendadas: ['Costanera Norte', 'Vespucio', 'Providencia (Los Leones)'],
       subRubros: [
         { name: 'Centros Comerciales', reason: 'Audiencia masiva en tránsito' },
         { name: 'Tiendas Tecnología', reason: 'Jóvenes profesionales early adopters' },
@@ -433,6 +506,19 @@ export function SalesIntelligence() {
       cpm: '$2.000',
       audience: 'Zonas gastronómicas',
       insight: 'Providencia y Ñuñoa alto flujo',
+      description: 'Las zonas gastronómicas de Providencia y Ñuñoa concentran alto flujo de jóvenes profesionales y universitarios con poder adquisitivo. Nuestras pantallas captan audiencia en horarios de almuerzo y after office con alta recordación.',
+      marcasEjemplo: ['Uber Eats', 'PedidosYa', 'Starbucks', 'McDonalds', 'Burger King', 'KFC'],
+      presupuestoPromedio: '$600.000 - $2.500.000 / mes',
+      estacionalidad: 'Todo el año (picos en verano y diciembre)',
+      horarioOptimo: '12:00-15:00 hrs (almuerzo) y 18:00-22:00 hrs (after office/cena)',
+      tipoMensaje: 'Sabor, conveniencia, delivery rápido y experiencias únicas',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '98.000' },
+        { label: 'Frecuencia', value: '3.5' },
+        { label: 'CTR Estimado', value: '1.8%' },
+        { label: 'Conversión', value: '4.2%' }
+      ],
+      pantallasRecomendadas: ['Providencia (Pedro de Valdivia)', 'Ñuñoa (Irarrázaval)', 'Santiago Centro'],
       subRubros: [
         { name: 'Restaurantes', reason: 'Zonas gastronómicas detectadas' },
         { name: 'Delivery Apps', reason: 'Profesionales digitales' },
@@ -450,6 +536,19 @@ export function SalesIntelligence() {
       cpm: '$2.500',
       audience: 'Familias en tránsito',
       insight: 'Rutas residenciales premium',
+      description: 'El sector inmobiliario se beneficia de la exposición constante a familias en rutas residenciales premium. Nuestros datos muestran correlación entre tráfico de SUVs familiares y búsqueda activa de vivienda en comunas objetivo.',
+      marcasEjemplo: ['Cencosud Shopping', 'Parque Arauco', 'LarrainVial', 'Banchile Inmobiliario', 'Orbis'],
+      presupuestoPromedio: '$1.800.000 - $6.000.000 / mes',
+      estacionalidad: 'Marzo-Mayo y Septiembre-Noviembre (temporadas de venta)',
+      horarioOptimo: '09:00-12:00 hrs (fin de semana) y 18:00-20:00 hrs (after office)',
+      tipoMensaje: 'Hogar, ubicación privilegiada, plusvalía y estilo de vida',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '167.000' },
+        { label: 'Frecuencia', value: '4.8' },
+        { label: 'CTR Estimado', value: '1.0%' },
+        { label: 'Conversión', value: '1.8%' }
+      ],
+      pantallasRecomendadas: ['Las Condes (Apoquindo)', 'Vitacura', 'La Dehesa'],
       subRubros: [
         { name: 'Proyectos Inmobiliarios', reason: 'Familias en búsqueda de hogar' },
         { name: 'Inmobiliarias Comerciales', reason: 'Profesionales empresarios' },
@@ -467,6 +566,19 @@ export function SalesIntelligence() {
       cpm: '$2.400',
       audience: '52% conductores 25-35',
       insight: 'Ñuñoa y Providencia jóvenes',
+      description: 'El sector tecnológico encuentra en Ñuñoa y Providencia su audiencia ideal: 52% de conductores entre 25-35 años, early adopters, con alta disposición a probar nuevos productos y servicios digitales.',
+      marcasEjemplo: ['Movistar', 'Claro', 'Entel', 'VTR', 'Apple', 'Samsung', 'Xiaomi'],
+      presupuestoPromedio: '$1.200.000 - $4.500.000 / mes',
+      estacionalidad: 'Marzo (vuelta al cole) y Noviembre (Black Friday)',
+      horarioOptimo: '07:00-09:00 hrs (commuting) y 18:00-21:00 hrs (after office)',
+      tipoMensaje: 'Innovación, conectividad, velocidad y experiencia de usuario',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '178.000' },
+        { label: 'Frecuencia', value: '4.0' },
+        { label: 'CTR Estimado', value: '1.5%' },
+        { label: 'Conversión', value: '2.9%' }
+      ],
+      pantallasRecomendadas: ['Ñuñoa (Irarrázaval)', 'Providencia (Los Leones)', 'Santiago Centro'],
       subRubros: [
         { name: 'Operadoras Móviles', reason: 'Profesionales digitales' },
         { name: 'ISPs Internet', reason: 'Familias conectadas' },
@@ -484,6 +596,19 @@ export function SalesIntelligence() {
       cpm: '$2.600',
       audience: 'Segmento ABC1 viajero',
       insight: 'Vitacura y Las Condes',
+      description: 'El segmento ABC1 de Vitacura y Las Condes presenta alta frecuencia de viajes internacionales (promedio 3.2 viajes/año). Nuestras pantallas captan esta audiencia en momentos de planificación y compra de viajes.',
+      marcasEjemplo: ['LATAM', 'Sky Airline', 'Despegar', 'Booking.com', 'Marriott', 'Hilton'],
+      presupuestoPromedio: '$1.000.000 - $4.000.000 / mes',
+      estacionalidad: 'Noviembre-Febrero (temporada alta) y Julio (vacaciones invierno)',
+      horarioOptimo: '09:00-12:00 hrs (planificación) y 18:00-21:00 hrs (decisión de compra)',
+      tipoMensaje: 'Experiencias únicas, destinos exclusivos, conveniencia y memorabilidad',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '134.000' },
+        { label: 'Frecuencia', value: '3.9' },
+        { label: 'CTR Estimado', value: '1.3%' },
+        { label: 'Conversión', value: '2.4%' }
+      ],
+      pantallasRecomendadas: ['Vitacura (Los Militares)', 'Las Condes (Apoquindo)', 'Aeropuerto'],
       subRubros: [
         { name: 'Aerolíneas', reason: 'Segmento ABC1 viajero' },
         { name: 'Hoteles y Resorts', reason: 'Familias premium' },
@@ -501,6 +626,19 @@ export function SalesIntelligence() {
       cpm: '$1.500',
       audience: 'Masivo en tránsito',
       insight: 'Ejes Norte-Sur y Costanera',
+      description: 'Los ejes Norte-Sur y Costanera concentran el mayor volumen de tráfico diario de Santiago, ideal para campañas de consumo masivo que requieren reach extensivo y frecuencia elevada.',
+      marcasEjemplo: ['Coca-Cola', 'Nestlé', 'Unilever', 'P&G', 'Colgate-Palmolive', 'McCain'],
+      presupuestoPromedio: '$3.000.000 - $10.000.000 / mes',
+      estacionalidad: 'Todo el año (picos en verano y Fiestas Patrias)',
+      horarioOptimo: '06:00-21:00 hrs (rotación continua para máximo reach)',
+      tipoMensaje: 'Confianza, calidad, disponibilidad y valor',
+      kpisSugeridos: [
+        { label: 'Reach Semanal', value: '456.000' },
+        { label: 'Frecuencia', value: '7.8' },
+        { label: 'CTR Estimado', value: '0.6%' },
+        { label: 'Conversión', value: '1.5%' }
+      ],
+      pantallasRecomendadas: ['Costanera Norte', 'Vespucio', 'Norte-Sur'],
       subRubros: [
         { name: 'Bebidas y Alimentos', reason: 'Audiencia masiva en tránsito' },
         { name: 'Cuidado Personal', reason: 'Segmento joven y familiar' },
@@ -670,20 +808,25 @@ export function SalesIntelligence() {
 
             {/* Content */}
             <div className="p-6 space-y-6">
+              {/* Descripción Detallada */}
+              <div className="bg-navy-950/50 border border-white/10 rounded-xl p-5">
+                <p className="text-sm text-gray-300 leading-relaxed">{selectedProspect.description}</p>
+              </div>
+
               {/* Métricas Clave */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
                   <p className="text-xs text-gray-400 mb-1">CPM Estimado</p>
-                  <p className="text-2xl font-bold text-white">{selectedProspect.cpm}</p>
+                  <p className="text-lg font-bold text-white">{selectedProspect.cpm}</p>
                 </div>
                 <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
                   <p className="text-xs text-gray-400 mb-1">Audiencia</p>
-                  <p className="text-sm font-bold text-white">{selectedProspect.audience}</p>
+                  <p className="text-xs font-bold text-white">{selectedProspect.audience}</p>
                 </div>
                 <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 text-center">
                   <p className="text-xs text-gray-400 mb-1">Prioridad</p>
                   <span className={cn(
-                    "text-sm font-bold px-2 py-1 rounded-full",
+                    "text-xs font-bold px-2 py-1 rounded-full",
                     selectedProspect.priority === 'Alta' ? 'bg-emerald-500/20 text-emerald-400' :
                     selectedProspect.priority === 'Media' ? 'bg-amber-500/20 text-amber-400' :
                     'bg-gray-500/20 text-gray-400'
@@ -691,6 +834,16 @@ export function SalesIntelligence() {
                     {selectedProspect.priority}
                   </span>
                 </div>
+              </div>
+
+              {/* KPIs Sugeridos */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {selectedProspect.kpisSugeridos.map((kpi, idx) => (
+                  <div key={idx} className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl p-3 text-center">
+                    <p className="text-[10px] text-gray-400 mb-1">{kpi.label}</p>
+                    <p className="text-lg font-bold text-cyan-400">{kpi.value}</p>
+                  </div>
+                ))}
               </div>
 
               {/* Insight Principal */}
@@ -702,6 +855,62 @@ export function SalesIntelligence() {
                   <h3 className="text-lg font-semibold text-white">Insight Clave</h3>
                 </div>
                 <p className="text-gray-300 leading-relaxed">{selectedProspect.insight}</p>
+              </div>
+
+              {/* Información Estratégica */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Target className="w-4 h-4 text-cyan-400" />
+                    <h4 className="text-sm font-semibold text-white">Presupuesto Promedio</h4>
+                  </div>
+                  <p className="text-sm text-gray-300">{selectedProspect.presupuestoPromedio}</p>
+                </div>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUpIcon className="w-4 h-4 text-emerald-400" />
+                    <h4 className="text-sm font-semibold text-white">Estacionalidad</h4>
+                  </div>
+                  <p className="text-sm text-gray-300">{selectedProspect.estacionalidad}</p>
+                </div>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <MapPin className="w-4 h-4 text-amber-400" />
+                    <h4 className="text-sm font-semibold text-white">Horario Óptimo</h4>
+                  </div>
+                  <p className="text-sm text-gray-300">{selectedProspect.horarioOptimo}</p>
+                </div>
+                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-purple-400" />
+                    <h4 className="text-sm font-semibold text-white">Tipo de Mensaje</h4>
+                  </div>
+                  <p className="text-sm text-gray-300">{selectedProspect.tipoMensaje}</p>
+                </div>
+              </div>
+
+              {/* Pantallas Recomendadas */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">Pantallas Recomendadas</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProspect.pantallasRecomendadas.map((pantalla, idx) => (
+                    <span key={idx} className="px-3 py-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-medium rounded-full">
+                      {pantalla}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Marcas Ejemplo */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">Marcas Ejemplo</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProspect.marcasEjemplo.map((marca, idx) => (
+                    <span key={idx} className="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-xs rounded-lg">
+                      {marca}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* Sub-rubros */}
