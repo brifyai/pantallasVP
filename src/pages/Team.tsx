@@ -735,18 +735,18 @@ export function Team() {
   const porcentajeEquipo = (totalVentas / totalMeta) * 100;
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
+    <div className="max-w-[1600px] mx-auto space-y-4 md:space-y-6 relative z-10 p-6">
+      {/* Header Section */}
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2 drop-shadow-md flex items-center gap-3">
+          <Users className="w-7 h-7 text-cyan-400" />
+          Equipo de Ventas
+        </h1>
+        <p className="text-gray-400 text-sm md:text-base">Organigrama, metas y recomendaciones de IA</p>
+      </div>
+      {/* Tabs */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Users className="w-7 h-7 text-cyan-400" />
-            Equipo de Ventas
-          </h1>
-          <p className="text-gray-400 mt-1">Organigrama, metas y recomendaciones de IA</p>
-        </div>
-        
-        {/* Tabs */}
+        <div></div>
         <div className="flex bg-navy-950/50 rounded-xl p-1 border border-white/10">
           <button
             onClick={() => setActiveTab('organigrama')}
