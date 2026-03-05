@@ -71,6 +71,44 @@ interface IndustryProspect {
   pantallasRecomendadas: string[];
   horarioOptimo: string;
   tipoMensaje: string;
+  // Perfil Cuantitativo
+  perfilCuantitativo: {
+    vehiculosDiarios: string;
+    vehiculosPremiumDiarios: string;
+    porcentajePremium: string;
+    peakAM: string;
+    peakPM: string;
+    finDeSemana: string;
+    ticketPromedio: string;
+    anosVehiculo: string;
+  };
+  // Perfil Cualitativo
+  perfilCualitativo: {
+    nivelSocioeconomico: string;
+    estiloVida: string[];
+    valores: string[];
+    aspiraciones: string[];
+    dolorPrincipal: string;
+    motivadorCompra: string;
+  };
+  // Comportamiento por Comuna
+  comportamientoPorComuna: {
+    comuna: string;
+    vehiculosTotales: string;
+    premiumPorcentaje: string;
+    marcasPrincipales: string[];
+    horarioPeak: string;
+    perfilConductor: string;
+  }[];
+  // Recomendaciones de Campaña
+  recomendacionesCampana: {
+    objetivo: string;
+    estrategia: string;
+    duracion: string;
+    inversionTotal: string;
+    kpiPrincipal: string;
+    kpiSecundario: string;
+  }[];
 }
 
 export function SalesIntelligence() {
@@ -375,7 +413,85 @@ export function SalesIntelligence() {
         { name: 'Mantenimiento Automotriz', reason: 'Dueños vehículos 2018+ valoran calidad' },
         { name: 'Accesorios y Tuning', reason: 'Conductores jóvenes en Providencia' }
       ],
-      priority: 'Alta'
+      priority: 'Alta',
+      perfilCuantitativo: {
+        vehiculosDiarios: '24.500 vehículos/día',
+        vehiculosPremiumDiarios: '8.575 vehículos premium/día',
+        porcentajePremium: '35% del total',
+        peakAM: '07:00-09:00 hrs (3.200 vehículos premium)',
+        peakPM: '17:00-20:00 hrs (4.100 vehículos premium)',
+        finDeSemana: '12.300 vehículos (sábado y domingo)',
+        ticketPromedio: 'UF 2.847 promedio por vehículo',
+        anosVehiculo: '68% modelos 2018 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (78%), C2 (18%), C3 (4%)',
+        estiloVida: ['Ejecutivos y profesionales senior', 'Empresarios y dueños de negocio', 'Expats y diplomáticos', 'Familias tradicionales de alto patrimonio'],
+        valores: ['Exclusividad y distinción', 'Tecnología e innovación', 'Seguridad y confianza', 'Sustentabilidad (híbridos/eléctricos)'],
+        aspiraciones: ['Estatus social visible', 'Experiencias premium únicas', 'Rendimiento y desempeño', 'Conectividad total'],
+        dolorPrincipal: 'Tiempo perdido en tráfico y necesidad de optimización del commuting',
+        motivadorCompra: 'Diferenciación social y acceso a tecnología de punta'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Las Condes',
+          vehiculosTotales: '9.800 vehículos/día',
+          premiumPorcentaje: '42%',
+          marcasPrincipales: ['BMW', 'Mercedes-Benz', 'Audi'],
+          horarioPeak: '07:30-09:00 y 18:00-20:00',
+          perfilConductor: 'Ejecutivos 35-55 años, zona financiera Sanhattan'
+        },
+        {
+          comuna: 'Vitacura',
+          vehiculosTotales: '7.200 vehículos/día',
+          premiumPorcentaje: '48%',
+          marcasPrincipales: ['Porsche', 'Land Rover', 'Mercedes-Benz'],
+          horarioPeak: '08:00-09:30 y 17:30-19:30',
+          perfilConductor: 'Familias tradicionales ABC1+, alto poder adquisitivo'
+        },
+        {
+          comuna: 'La Dehesa',
+          vehiculosTotales: '4.100 vehículos/día',
+          premiumPorcentaje: '52%',
+          marcasPrincipales: ['BMW', 'Audi', 'Volvo'],
+          horarioPeak: '07:00-08:30 y 18:30-20:30',
+          perfilConductor: 'Familias jóvenes profesionales, hijos en colegios bilingües'
+        },
+        {
+          comuna: 'Providencia',
+          vehiculosTotales: '6.800 vehículos/día',
+          premiumPorcentaje: '28%',
+          marcasPrincipales: ['Audi', 'BMW', 'Volkswagen'],
+          horarioPeak: '08:00-10:00 y 18:00-20:00',
+          perfilConductor: 'Profesionales jóvenes 28-40 años, zona gastronómica'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Lanzamiento de nuevo modelo premium',
+          estrategia: 'Rotación en Las Condes y Vitacura con foco en horario PM',
+          duracion: '4 semanas',
+          inversionTotal: '$6.500.000',
+          kpiPrincipal: '156.000 impresiones semanales',
+          kpiSecundario: '34% recordación de marca'
+        },
+        {
+          objetivo: 'Posicionamiento de marca de lujo',
+          estrategia: 'Presencia continua en pantallas premium',
+          duracion: '12 semanas',
+          inversionTotal: '$18.000.000',
+          kpiPrincipal: '468.000 impresiones totales',
+          kpiSecundario: '2.1% conversión estimada'
+        },
+        {
+          objetivo: 'Promoción de servicio postventa',
+          estrategia: 'Foco en Maipú y La Florida (SUVs familiares)',
+          duracion: '6 semanas',
+          inversionTotal: '$4.200.000',
+          kpiPrincipal: '89.000 impresiones semanales',
+          kpiSecundario: '18% incremento en agendamientos'
+        }
+      ]
     },
     {
       id: 'financiero',
@@ -405,7 +521,85 @@ export function SalesIntelligence() {
         { name: 'Inmobiliarias', reason: 'Familias en búsqueda de vivienda' },
         { name: 'Fintech', reason: 'Jóvenes profesionales digitales' }
       ],
-      priority: 'Alta'
+      priority: 'Alta',
+      perfilCuantitativo: {
+        vehiculosDiarios: '31.200 vehículos/día',
+        vehiculosPremiumDiarios: '18.720 vehículos ABC1/día',
+        porcentajePremium: '60% segmento objetivo',
+        peakAM: '06:30-09:00 hrs (78% retención visual)',
+        peakPM: '18:00-20:00 hrs (65% retención visual)',
+        finDeSemana: '8.400 vehículos (domingo)',
+        ticketPromedio: 'UF 450 promedio productos financieros',
+        anosVehiculo: '72% modelos 2017 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (82%), C2 (15%), C3 (3%)',
+        estiloVida: ['Ejecutivos C-level y VP', 'Gerentes de banca y finanzas', 'Empresarios y inversionistas', 'Profesionales independientes exitosos'],
+        valores: ['Seguridad patrimonial', 'Rentabilidad consistente', 'Asesoría personalizada', 'Beneficios exclusivos'],
+        aspiraciones: ['Independencia financiera', 'Legado familiar', 'Acceso a oportunidades premium', 'Tranquilidad en jubilación'],
+        dolorPrincipal: 'Complejidad de productos financieros y falta de tiempo para gestión patrimonial',
+        motivadorCompra: 'Protección y crecimiento del patrimonio con asesoría de confianza'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Las Condes (Sanhattan)',
+          vehiculosTotales: '14.200 vehículos/día',
+          premiumPorcentaje: '68%',
+          marcasPrincipales: ['BMW', 'Mercedes-Benz', 'Audi'],
+          horarioPeak: '07:30-09:30 y 18:30-20:30',
+          perfilConductor: 'Ejecutivos financieros 35-55 años, torres corporativas'
+        },
+        {
+          comuna: 'Providencia',
+          vehiculosTotales: '8.900 vehículos/día',
+          premiumPorcentaje: '58%',
+          marcasPrincipales: ['Volkswagen', 'Mazda', 'Hyundai'],
+          horarioPeak: '08:00-10:00 y 17:00-19:00',
+          perfilConductor: 'Profesionales 30-45 años, oficinas y centros de negocio'
+        },
+        {
+          comuna: 'Vitacura',
+          vehiculosTotales: '5.800 vehículos/día',
+          premiumPorcentaje: '72%',
+          marcasPrincipales: ['Mercedes-Benz', 'Land Rover', 'Volvo'],
+          horarioPeak: '08:00-09:30 y 18:00-20:00',
+          perfilConductor: 'Ejecutivos senior y empresarios, zonas residenciales premium'
+        },
+        {
+          comuna: 'Santiago Centro',
+          vehiculosTotales: '12.400 vehículos/día',
+          premiumPorcentaje: '42%',
+          marcasPrincipales: ['Chevrolet', 'Kia', 'Nissan'],
+          horarioPeak: '07:00-09:00 y 18:00-20:00',
+          perfilConductor: 'Profesionales y comerciantes, zona financiera tradicional'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña de captación de fondos mutuos',
+          estrategia: 'Foco en Sanhattan horario AM con mensaje de rentabilidad',
+          duracion: '6 semanas',
+          inversionTotal: '$8.500.000',
+          kpiPrincipal: '234.000 impresiones semanales',
+          kpiSecundario: '3.4% conversión estimada'
+        },
+        {
+          objetivo: 'Posicionamiento de tarjeta premium',
+          estrategia: 'Rotación en zonas corporativas y gastronómicas',
+          duracion: '8 semanas',
+          inversionTotal: '$11.200.000',
+          kpiPrincipal: '312.000 impresiones semanales',
+          kpiSecundario: '28% incremento en solicitudes'
+        },
+        {
+          objetivo: 'Educación previsional (AFP)',
+          estrategia: 'Presencia masiva en ejes de commuting',
+          duracion: '12 semanas',
+          inversionTotal: '$15.000.000',
+          kpiPrincipal: '468.000 impresiones semanales',
+          kpiSecundario: '42% recordación de mensaje'
+        }
+      ]
     },
     {
       id: 'salud',
@@ -435,7 +629,69 @@ export function SalesIntelligence() {
         { name: 'Farmacias Especialidad', reason: 'Audiencia con poder adquisitivo' },
         { name: 'Gimnasios Premium', reason: 'Segmento joven profesional' }
       ],
-      priority: 'Alta'
+      priority: 'Alta',
+      perfilCuantitativo: {
+        vehiculosDiarios: '18.600 vehículos/día',
+        vehiculosPremiumDiarios: '7.812 SUVs familiares/día',
+        porcentajePremium: '42% del total',
+        peakAM: '08:00-10:00 hrs (2.800 SUVs familiares)',
+        peakPM: '15:00-18:00 hrs (3.400 SUVs familiares)',
+        finDeSemana: '9.200 vehículos (sábado y domingo)',
+        ticketPromedio: '$85.000 promedio consulta/gasto',
+        anosVehiculo: '64% modelos 2016 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (65%), C2 (28%), C3 (7%)',
+        estiloVida: ['Padres de familia 35-50 años', 'Profesionales con hijos', 'Deportistas y wellness enthusiasts', 'Personas con conciencia preventiva'],
+        valores: ['Salud y bienestar familiar', 'Prevención y cuidado', 'Calidad de vida', 'Atención personalizada'],
+        aspiraciones: ['Vida activa y saludable', 'Acceso a medicina de avanzada', 'Bienestar integral', 'Longevidad con calidad'],
+        dolorPrincipal: 'Tiempo de espera en consultas y dificultad para acceder a especialistas',
+        motivadorCompra: 'Tranquilidad de contar con atención médica de calidad y oportuna'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Maipú',
+          vehiculosTotales: '7.200 vehículos/día',
+          premiumPorcentaje: '45%',
+          marcasPrincipales: ['Chevrolet', 'Nissan', 'Kia'],
+          horarioPeak: '08:00-10:00 y 15:30-17:30',
+          perfilConductor: 'Familias C2-ABC1, hijos en edad escolar'
+        },
+        {
+          comuna: 'La Florida',
+          vehiculosTotales: '6.800 vehículos/día',
+          premiumPorcentaje: '40%',
+          marcasPrincipales: ['Hyundai', 'Chevrolet', 'Volkswagen'],
+          horarioPeak: '08:00-09:30 y 16:00-18:00',
+          perfilConductor: 'Familias trabajadoras, preocupación por salud preventiva'
+        },
+        {
+          comuna: 'Puente Alto',
+          vehiculosTotales: '4.600 vehículos/día',
+          premiumPorcentaje: '38%',
+          marcasPrincipales: ['Kia', 'Suzuki', 'Renault'],
+          horarioPeak: '07:30-09:00 y 16:30-18:30',
+          perfilConductor: 'Familias emergentes, primer vehículo SUV'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña de medicina preventiva',
+          estrategia: 'Foco en Maipú y La Florida horario PM',
+          duracion: '6 semanas',
+          inversionTotal: '$3.800.000',
+          kpiPrincipal: '189.000 impresiones semanales',
+          kpiSecundario: '2.8% conversión estimada'
+        },
+        {
+          objetivo: 'Posicionamiento de clínica',
+          estrategia: 'Presencia en ejes de alta visibilidad familiar',
+          duracion: '10 semanas',
+          inversionTotal: '$6.500.000',
+          kpiPrincipal: '315.000 impresiones totales',
+          kpiSecundario: '34% recordación de marca'
+        }
+      ]
     },
     {
       id: 'educacion',
@@ -465,7 +721,69 @@ export function SalesIntelligence() {
         { name: 'Idiomas', reason: 'Profesionales en desarrollo' },
         { name: 'Educación Ejecutiva', reason: 'Segmento corporativo' }
       ],
-      priority: 'Media'
+      priority: 'Media',
+      perfilCuantitativo: {
+        vehiculosDiarios: '12.400 vehículos/día',
+        vehiculosPremiumDiarios: '4.960 jóvenes 18-25/día',
+        porcentajePremium: '40% segmento objetivo',
+        peakAM: '09:00-11:00 hrs (padres acompañantes)',
+        peakPM: '18:00-21:00 hrs (jóvenes estudiantes)',
+        finDeSemana: '3.200 vehículos (sábado clases)',
+        ticketPromedio: '$450.000 promedio mensualidad',
+        anosVehiculo: '58% modelos 2015 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (45%), C2 (38%), C3 (17%)',
+        estiloVida: ['Jóvenes universitarios 18-25 años', 'Padres preocupados por futuro de hijos', 'Profesionales en capacitación continua', 'Estudiantes trabajadores'],
+        valores: ['Educación de calidad', 'Empleabilidad futura', 'Prestigio institucional', 'Flexibilidad horaria'],
+        aspiraciones: ['Título profesional', 'Mejor calidad de vida', 'Desarrollo de carrera', 'Movilidad social'],
+        dolorPrincipal: 'Incertidumbre sobre empleabilidad y costo de la educación',
+        motivadorCompra: 'Garantía de inserción laboral y prestigio de la institución'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Santiago Centro',
+          vehiculosTotales: '12.400 vehículos/día',
+          premiumPorcentaje: '40%',
+          marcasPrincipales: ['Chevrolet', 'Nissan', 'Kia'],
+          horarioPeak: '09:00-11:00 y 18:00-21:00',
+          perfilConductor: 'Jóvenes universitarios y padres, zona educativa'
+        },
+        {
+          comuna: 'Providencia',
+          vehiculosTotales: '5.800 vehículos/día',
+          premiumPorcentaje: '52%',
+          marcasPrincipales: ['Volkswagen', 'Mazda', 'BMW'],
+          horarioPeak: '08:30-10:30 y 18:30-20:30',
+          perfilConductor: 'Profesionales postgrado, educación ejecutiva'
+        },
+        {
+          comuna: 'Ñuñoa',
+          vehiculosTotales: '4.200 vehículos/día',
+          premiumPorcentaje: '48%',
+          marcasPrincipales: ['Hyundai', 'Chevrolet', 'Peugeot'],
+          horarioPeak: '09:00-11:00 y 19:00-21:00',
+          perfilConductor: 'Jóvenes profesionales, educación continua'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña de matrículas',
+          estrategia: 'Foco en Santiago Centro horario mixto (padres y jóvenes)',
+          duracion: '8 semanas',
+          inversionTotal: '$2.800.000',
+          kpiPrincipal: '145.000 impresiones semanales',
+          kpiSecundario: '3.2% conversión estimada'
+        },
+        {
+          objetivo: 'Posicionamiento de postgrado',
+          estrategia: 'Providencia y Ñuñoa horario after office',
+          duracion: '6 semanas',
+          inversionTotal: '$2.100.000',
+          kpiPrincipal: '98.000 impresiones semanales',
+          kpiSecundario: '28% incremento en consultas'
+        }
+      ]
     },
     {
       id: 'retail',
@@ -495,7 +813,69 @@ export function SalesIntelligence() {
         { name: 'Marcas de Lujo', reason: 'Segmento premium Vitacura' },
         { name: 'Supermercados Premium', reason: 'Familias ABC1' }
       ],
-      priority: 'Media'
+      priority: 'Media',
+      perfilCuantitativo: {
+        vehiculosDiarios: '89.000 vehículos/día',
+        vehiculosPremiumDiarios: '35.600 segmento objetivo/día',
+        porcentajePremium: '40% del total',
+        peakAM: '10:00-12:00 hrs (compras mañana)',
+        peakPM: '17:00-21:00 hrs (after office)',
+        finDeSemana: '45.000 vehículos (sábado y domingo)',
+        ticketPromedio: '$125.000 promedio compra',
+        anosVehiculo: '62% modelos 2015 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (52%), C2 (35%), C3 (13%)',
+        estiloVida: ['Compradores omnicanal', 'Buscadores de ofertas y conveniencia', 'Early adopters de tecnología', 'Familias urbanas activas'],
+        valores: ['Variedad de productos', 'Precios competitivos', 'Experiencia de compra', 'Despacho rápido'],
+        aspiraciones: ['Acceso a marcas internacionales', 'Tendencias globales', 'Conveniencia total', 'Experiencias únicas'],
+        dolorPrincipal: 'Falta de tiempo para compras presenciales y sobrecarga de opciones online',
+        motivadorCompra: 'Combinación de experiencia física y digital con entrega conveniente'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Costanera Norte',
+          vehiculosTotales: '34.200 vehículos/día',
+          premiumPorcentaje: '45%',
+          marcasPrincipales: ['BMW', 'Mercedes-Benz', 'Audi'],
+          horarioPeak: '10:00-13:00 y 17:00-20:00',
+          perfilConductor: 'Compradores premium, acceso a malls'
+        },
+        {
+          comuna: 'Vespucio',
+          vehiculosTotales: '28.900 vehículos/día',
+          premiumPorcentaje: '38%',
+          marcasPrincipales: ['Chevrolet', 'Nissan', 'Kia'],
+          horarioPeak: '11:00-14:00 y 18:00-21:00',
+          perfilConductor: 'Familias C2-C3, compras masivas'
+        },
+        {
+          comuna: 'Providencia (Los Leones)',
+          vehiculosTotales: '12.400 vehículos/día',
+          premiumPorcentaje: '52%',
+          marcasPrincipales: ['Volkswagen', 'Mazda', 'BMW'],
+          horarioPeak: '12:00-15:00 y 19:00-22:00',
+          perfilConductor: 'Jóvenes profesionales, compras after office'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña Black Friday',
+          estrategia: 'Rotación masiva en ejes principales',
+          duracion: '4 semanas',
+          inversionTotal: '$5.500.000',
+          kpiPrincipal: '312.000 impresiones semanales',
+          kpiSecundario: '2.5% conversión estimada'
+        },
+        {
+          objetivo: 'Lanzamiento e-commerce',
+          estrategia: 'Foco en zonas de alto tráfico digital',
+          duracion: '6 semanas',
+          inversionTotal: '$4.200.000',
+          kpiPrincipal: '189.000 impresiones semanales',
+          kpiSecundario: '34% incremento en visitas web'
+        }
+      ]
     },
     {
       id: 'gastronomia',
@@ -525,7 +905,69 @@ export function SalesIntelligence() {
         { name: 'Cafeterías Premium', reason: 'Segmento joven urbano' },
         { name: 'Bares y Vida Nocturna', reason: 'Zona universitaria' }
       ],
-      priority: 'Media'
+      priority: 'Media',
+      perfilCuantitativo: {
+        vehiculosDiarios: '15.800 vehículos/día',
+        vehiculosPremiumDiarios: '8.690 jóvenes profesionales/día',
+        porcentajePremium: '55% del total',
+        peakAM: '12:00-15:00 hrs (almuerzo)',
+        peakPM: '18:00-22:00 hrs (after office/cena)',
+        finDeSemana: '7.200 vehículos (viernes y sábado noche)',
+        ticketPromedio: '$18.000 promedio ticket',
+        anosVehiculo: '58% modelos 2016 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (58%), C2 (32%), C3 (10%)',
+        estiloVida: ['Foodies y exploradores gastronómicos', 'Profesionales jóvenes urbanos', 'Universitarios con poder adquisitivo', 'Amantes de la vida nocturna'],
+        valores: ['Calidad culinaria', 'Experiencias únicas', 'Ambiente y atmósfera', 'Variedad de opciones'],
+        aspiraciones: ['Descubrir nuevos sabores', 'Compartir experiencias gastronómicas', 'Acceso a tendencias globales', 'Vida social activa'],
+        dolorPrincipal: 'Tiempo de espera y dificultad para encontrar mesas en horarios peak',
+        motivadorCompra: 'Experiencia memorable con delivery rápido o reserva garantizada'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Providencia (Pedro de Valdivia)',
+          vehiculosTotales: '6.200 vehículos/día',
+          premiumPorcentaje: '58%',
+          marcasPrincipales: ['Volkswagen', 'Mazda', 'BMW'],
+          horarioPeak: '12:30-15:00 y 19:30-22:00',
+          perfilConductor: 'Profesionales 28-45 años, zona gastronómica'
+        },
+        {
+          comuna: 'Ñuñoa (Irarrázaval)',
+          vehiculosTotales: '5.400 vehículos/día',
+          premiumPorcentaje: '52%',
+          marcasPrincipales: ['Hyundai', 'Chevrolet', 'Peugeot'],
+          horarioPeak: '13:00-15:00 y 20:00-23:00',
+          perfilConductor: 'Jóvenes 25-35 años, ambiente universitario'
+        },
+        {
+          comuna: 'Santiago Centro',
+          vehiculosTotales: '4.200 vehículos/día',
+          premiumPorcentaje: '48%',
+          marcasPrincipales: ['Kia', 'Nissan', 'Renault'],
+          horarioPeak: '12:00-14:30 y 19:00-21:30',
+          perfilConductor: 'Trabajadores y turistas, zona histórica'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Lanzamiento de app de delivery',
+          estrategia: 'Foco en zonas gastronómicas horario almuerzo y cena',
+          duracion: '6 semanas',
+          inversionTotal: '$2.800.000',
+          kpiPrincipal: '98.000 impresiones semanales',
+          kpiSecundario: '4.2% conversión estimada'
+        },
+        {
+          objetivo: 'Promoción de cadena de restaurantes',
+          estrategia: 'Rotación en ejes de alto flujo gastronómico',
+          duracion: '8 semanas',
+          inversionTotal: '$3.500.000',
+          kpiPrincipal: '156.000 impresiones totales',
+          kpiSecundario: '28% incremento en reservas'
+        }
+      ]
     },
     {
       id: 'inmobiliario',
@@ -555,7 +997,77 @@ export function SalesIntelligence() {
         { name: 'Constructoras', reason: 'Segmento ABC1' },
         { name: 'Arriendo de Oficinas', reason: 'Zona empresarial Las Condes' }
       ],
-      priority: 'Alta'
+      priority: 'Alta',
+      perfilCuantitativo: {
+        vehiculosDiarios: '14.200 vehículos/día',
+        vehiculosPremiumDiarios: '7.952 familias ABC1/día',
+        porcentajePremium: '56% del total',
+        peakAM: '09:00-12:00 hrs (fin de semana)',
+        peakPM: '18:00-20:00 hrs (after office)',
+        finDeSemana: '8.400 vehículos (sábado y domingo)',
+        ticketPromedio: 'UF 4.500 promedio propiedad',
+        anosVehiculo: '66% modelos 2017 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (72%), C2 (22%), C3 (6%)',
+        estiloVida: ['Familias en expansión', 'Inversionistas inmobiliarios', 'Profesionales exitosos', 'Parejas jóvenes profesionales'],
+        valores: ['Ubicación privilegiada', 'Plusvalía asegurada', 'Calidad de construcción', 'Estilo de vida premium'],
+        aspiraciones: ['Hogar de sueños', 'Independencia financiera', 'Legado familiar', 'Estatus residencial'],
+        dolorPrincipal: 'Complejidad del proceso de compra y dificultad para encontrar propiedad ideal',
+        motivadorCompra: 'Oportunidad única en ubicación premium con proyección de plusvalía'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Las Condes (Apoquindo)',
+          vehiculosTotales: '5.800 vehículos/día',
+          premiumPorcentaje: '62%',
+          marcasPrincipales: ['BMW', 'Mercedes-Benz', 'Audi'],
+          horarioPeak: '10:00-13:00 y 18:00-20:00',
+          perfilConductor: 'Familias ABC1, búsqueda activa de vivienda'
+        },
+        {
+          comuna: 'Vitacura',
+          vehiculosTotales: '4.200 vehículos/día',
+          premiumPorcentaje: '68%',
+          marcasPrincipales: ['Land Rover', 'Mercedes-Benz', 'Volvo'],
+          horarioPeak: '11:00-13:00 y 12:00-14:00',
+          perfilConductor: 'Familias tradicionales, alto poder adquisitivo'
+        },
+        {
+          comuna: 'La Dehesa',
+          vehiculosTotales: '2.800 vehículos/día',
+          premiumPorcentaje: '72%',
+          marcasPrincipales: ['BMW', 'Audi', 'Volkswagen'],
+          horarioPeak: '10:00-13:00 (fin de semana)',
+          perfilConductor: 'Familias jóvenes, primera vivienda premium'
+        },
+        {
+          comuna: 'Providencia',
+          vehiculosTotales: '3.400 vehículos/día',
+          premiumPorcentaje: '54%',
+          marcasPrincipales: ['Mazda', 'Volkswagen', 'Hyundai'],
+          horarioPeak: '18:00-20:00',
+          perfilConductor: 'Profesionales, inversión y arriendo'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Lanzamiento de proyecto inmobiliario',
+          estrategia: 'Foco en Las Condes y Vitacura fin de semana',
+          duracion: '8 semanas',
+          inversionTotal: '$4.800.000',
+          kpiPrincipal: '167.000 impresiones semanales',
+          kpiSecundario: '1.8% conversión estimada'
+        },
+        {
+          objetivo: 'Venta de oficinas corporativas',
+          estrategia: 'Sanhattan horario after office',
+          duracion: '10 semanas',
+          inversionTotal: '$5.500.000',
+          kpiPrincipal: '145.000 impresiones semanales',
+          kpiSecundario: '24% incremento en consultas'
+        }
+      ]
     },
     {
       id: 'tecnologia',
@@ -585,7 +1097,69 @@ export function SalesIntelligence() {
         { name: 'Software SaaS', reason: 'Zona empresarial tech' },
         { name: 'Dispositivos', reason: 'Jóvenes early adopters' }
       ],
-      priority: 'Media'
+      priority: 'Media',
+      perfilCuantitativo: {
+        vehiculosDiarios: '17.800 vehículos/día',
+        vehiculosPremiumDiarios: '9.256 jóvenes 25-35/día',
+        porcentajePremium: '52% del total',
+        peakAM: '07:00-09:00 hrs (commuting)',
+        peakPM: '18:00-21:00 hrs (after office)',
+        finDeSemana: '8.900 vehículos (sábado y domingo)',
+        ticketPromedio: '$850.000 promedio dispositivo/servicio',
+        anosVehiculo: '60% modelos 2017 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (48%), C2 (38%), C3 (14%)',
+        estiloVida: ['Early adopters tecnológicos', 'Profesionales digitales', 'Gamers y entusiastas', 'Creadores de contenido'],
+        valores: ['Innovación constante', 'Conectividad total', 'Experiencia de usuario', 'Diseño y estética'],
+        aspiraciones: ['Acceso a última tecnología', 'Productividad máxima', 'Entretenimiento inmersivo', 'Reconocimiento social'],
+        dolorPrincipal: 'Obsolescencia rápida y complejidad de configuración',
+        motivadorCompra: 'Tecnología de punta con experiencia simplificada y soporte confiable'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Ñuñoa (Irarrázaval)',
+          vehiculosTotales: '6.400 vehículos/día',
+          premiumPorcentaje: '52%',
+          marcasPrincipales: ['Hyundai', 'Chevrolet', 'Volkswagen'],
+          horarioPeak: '08:00-10:00 y 18:00-20:00',
+          perfilConductor: 'Jóvenes profesionales 25-35, early adopters'
+        },
+        {
+          comuna: 'Providencia (Los Leones)',
+          vehiculosTotales: '5.800 vehículos/día',
+          premiumPorcentaje: '56%',
+          marcasPrincipales: ['Mazda', 'BMW', 'Audi'],
+          horarioPeak: '07:30-09:30 y 18:30-20:30',
+          perfilConductor: 'Profesionales tech, zona de oficinas'
+        },
+        {
+          comuna: 'Santiago Centro',
+          vehiculosTotales: '5.600 vehículos/día',
+          premiumPorcentaje: '48%',
+          marcasPrincipales: ['Kia', 'Nissan', 'Chevrolet'],
+          horarioPeak: '09:00-11:00 y 19:00-21:00',
+          perfilConductor: 'Estudiantes y jóvenes profesionales'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Lanzamiento de smartphone flagship',
+          estrategia: 'Foco en Ñuñoa y Providencia horario commuting',
+          duracion: '4 semanas',
+          inversionTotal: '$3.200.000',
+          kpiPrincipal: '178.000 impresiones semanales',
+          kpiSecundario: '2.9% conversión estimada'
+        },
+        {
+          objetivo: 'Campaña de conectividad 5G',
+          estrategia: 'Rotación en ejes de alto flujo joven',
+          duracion: '8 semanas',
+          inversionTotal: '$5.500.000',
+          kpiPrincipal: '312.000 impresiones semanales',
+          kpiSecundario: '38% recordación de marca'
+        }
+      ]
     },
     {
       id: 'turismo',
@@ -615,7 +1189,69 @@ export function SalesIntelligence() {
         { name: 'Arriendo Vehículos', reason: 'Profesionales y turistas' },
         { name: 'Agencias de Viaje', reason: 'Audiencia con poder adquisitivo' }
       ],
-      priority: 'Media'
+      priority: 'Media',
+      perfilCuantitativo: {
+        vehiculosDiarios: '11.200 vehículos/día',
+        vehiculosPremiumDiarios: '6.720 ABC1 viajero/día',
+        porcentajePremium: '60% del total',
+        peakAM: '09:00-12:00 hrs (planificación)',
+        peakPM: '18:00-21:00 hrs (decisión de compra)',
+        finDeSemana: '5.400 vehículos (sábado y domingo)',
+        ticketPromedio: '$1.200.000 promedio viaje',
+        anosVehiculo: '70% modelos 2017 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (78%), C2 (18%), C3 (4%)',
+        estiloVida: ['Viajeros frecuentes internacionales', 'Familias premium activas', 'Ejecutivos con viajes de negocio', 'Amantes de experiencias únicas'],
+        valores: ['Experiencias memorables', 'Comodidad y conveniencia', 'Servicio personalizado', 'Destinos exclusivos'],
+        aspiraciones: ['Conocer destinos exóticos', 'Disfrutar con la familia', 'Estatus de viajero frecuente', 'Relajación total'],
+        dolorPrincipal: 'Complejidad de planificación y tiempo limitado para investigar opciones',
+        motivadorCompra: 'Experiencia única sin complicaciones con servicio premium incluido'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Vitacura (Los Militares)',
+          vehiculosTotales: '4.800 vehículos/día',
+          premiumPorcentaje: '68%',
+          marcasPrincipales: ['Land Rover', 'Mercedes-Benz', 'BMW'],
+          horarioPeak: '10:00-12:00 y 19:00-21:00',
+          perfilConductor: 'Familias ABC1+, viajes internacionales frecuentes'
+        },
+        {
+          comuna: 'Las Condes (Apoquindo)',
+          vehiculosTotales: '4.200 vehículos/día',
+          premiumPorcentaje: '62%',
+          marcasPrincipales: ['BMW', 'Audi', 'Mercedes-Benz'],
+          horarioPeak: '09:00-11:00 y 18:00-20:00',
+          perfilConductor: 'Ejecutivos y familias, planificación de viajes'
+        },
+        {
+          comuna: 'La Dehesa',
+          vehiculosTotales: '2.200 vehículos/día',
+          premiumPorcentaje: '72%',
+          marcasPrincipales: ['Volvo', 'BMW', 'Audi'],
+          horarioPeak: '10:00-12:00 (fin de semana)',
+          perfilConductor: 'Familias jóvenes, viajes de vacaciones'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña de temporada alta (verano)',
+          estrategia: 'Foco en Vitacura y Las Condes horario mixto',
+          duracion: '8 semanas',
+          inversionTotal: '$3.500.000',
+          kpiPrincipal: '134.000 impresiones semanales',
+          kpiSecundario: '2.4% conversión estimada'
+        },
+        {
+          objetivo: 'Promoción de hoteles de lujo',
+          estrategia: 'Presencia en zonas premium fin de semana',
+          duracion: '6 semanas',
+          inversionTotal: '$2.800.000',
+          kpiPrincipal: '98.000 impresiones semanales',
+          kpiSecundario: '32% incremento en consultas'
+        }
+      ]
     },
     {
       id: 'consumo',
@@ -645,7 +1281,69 @@ export function SalesIntelligence() {
         { name: 'Productos Limpieza', reason: 'Familias en commuting' },
         { name: 'Mascotas', reason: 'Familias urbanas' }
       ],
-      priority: 'Baja'
+      priority: 'Baja',
+      perfilCuantitativo: {
+        vehiculosDiarios: '156.000 vehículos/día',
+        vehiculosPremiumDiarios: '62.400 segmento objetivo/día',
+        porcentajePremium: '40% del total',
+        peakAM: '06:00-09:00 hrs (commuting)',
+        peakPM: '17:00-20:00 hrs (regreso a casa)',
+        finDeSemana: '78.000 vehículos (sábado y domingo)',
+        ticketPromedio: '$8.500 promedio producto',
+        anosVehiculo: '55% modelos 2014 o superiores'
+      },
+      perfilCualitativo: {
+        nivelSocioeconomico: 'ABC1 (35%), C2 (42%), C3 (23%)',
+        estiloVida: ['Consumidores masivos urbanos', 'Familias trabajadoras', 'Compradores por conveniencia', 'Leales a marcas tradicionales'],
+        valores: ['Confianza en la marca', 'Precio accesible', 'Disponibilidad constante', 'Calidad consistente'],
+        aspiraciones: ['Mejor calidad de vida', 'Bienestar familiar', 'Reconocimiento social', 'Estabilidad económica'],
+        dolorPrincipal: 'Presupuesto limitado y necesidad de optimizar compras',
+        motivadorCompra: 'Marca confiable con precio justo y disponibilidad garantizada'
+      },
+      comportamientoPorComuna: [
+        {
+          comuna: 'Costanera Norte',
+          vehiculosTotales: '52.000 vehículos/día',
+          premiumPorcentaje: '45%',
+          marcasPrincipales: ['Chevrolet', 'Nissan', 'Kia'],
+          horarioPeak: '07:00-09:00 y 18:00-20:00',
+          perfilConductor: 'Commuters masivos, eje oriente-poniente'
+        },
+        {
+          comuna: 'Vespucio',
+          vehiculosTotales: '48.000 vehículos/día',
+          premiumPorcentaje: '38%',
+          marcasPrincipales: ['Hyundai', 'Suzuki', 'Renault'],
+          horarioPeak: '07:30-09:30 y 17:30-19:30',
+          perfilConductor: 'Trabajadores, eje norte-sur'
+        },
+        {
+          comuna: 'Norte-Sur',
+          vehiculosTotales: '56.000 vehículos/día',
+          premiumPorcentaje: '35%',
+          marcasPrincipales: ['Kia', 'MG', 'Chery'],
+          horarioPeak: '06:30-08:30 y 18:00-20:00',
+          perfilConductor: 'Familias C2-C3, acceso a Santiago'
+        }
+      ],
+      recomendacionesCampana: [
+        {
+          objetivo: 'Campaña masiva de awareness',
+          estrategia: 'Rotación continua en ejes principales',
+          duracion: '12 semanas',
+          inversionTotal: '$8.500.000',
+          kpiPrincipal: '456.000 impresiones semanales',
+          kpiSecundario: '1.5% conversión estimada'
+        },
+        {
+          objetivo: 'Lanzamiento de nuevo producto',
+          estrategia: 'Presencia intensiva en ejes Norte-Sur y Costanera',
+          duracion: '6 semanas',
+          inversionTotal: '$5.500.000',
+          kpiPrincipal: '378.000 impresiones semanales',
+          kpiSecundario: '42% recordación de marca'
+        }
+      ]
     }
   ];
 
