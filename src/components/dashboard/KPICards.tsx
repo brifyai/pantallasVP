@@ -50,7 +50,7 @@ export function KPICards({ data }: KPICardsProps) {
       trend: 'Estable'
     },
     {
-      title: 'Hora Pico',
+      title: 'Hora Peak',
       value: data.peakHour,
       icon: Clock,
       color: 'text-amber-400',

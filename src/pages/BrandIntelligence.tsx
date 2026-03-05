@@ -275,15 +275,15 @@ export function BrandIntelligence() {
             <Users className="w-5 h-5 text-magenta-400" />
             Antigüedad del Parque
           </h3>
-          <div className="h-72">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={yearData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
+                  innerRadius={70}
+                  outerRadius={100}
                   paddingAngle={5}
                   dataKey="value"
                   stroke="none"

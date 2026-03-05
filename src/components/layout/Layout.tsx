@@ -2,6 +2,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { HelpModal } from './HelpModal';
 import { useState, useEffect } from 'react';
 
 export function Layout() {
@@ -74,6 +75,9 @@ export function Layout() {
           </div>
         </div>
       </div>
+
+      {/* Help Modal Button */}
+      <HelpModal />
     </div>
   );
 }

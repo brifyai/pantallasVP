@@ -9,12 +9,26 @@ import {
   ShieldAlert,
   Filter
 } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Circle, Polyline, Popup, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Circle, Polyline, Popup, CircleMarker, Polygon } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+// Declaración de tipos para leaflet.heat
+declare module 'leaflet' {
+  interface LayerGroup {
+    setLatLngs(latlngs: L.LatLngExpression[]): this;
+  }
+  function heatLayer(latlngs: L.LatLngExpression[], options?: {
+    radius?: number;
+    blur?: number;
+    maxZoom?: number;
+    gradient?: Record<number, string>;
+  }): L.LayerGroup;
+}
+
 import { SCREENS, recentDetections, BRANDS } from '../data/mockData';
 import { cn } from '../utils/cn';
+import { HeatmapLayer } from '../components/HeatmapLayer';
 
 // Puntos de "Huecos" (Gaps in coverage) - Mocked
 const GAPS = [
@@ -23,7 +37,7 @@ const GAPS = [
   { id: 'gap-3', name: 'Peñalolén Alto', lat: -33.49, lng: -70.52, reason: 'Segmento AB de alto crecimiento' }
 ];
 
-// Comunas de Origen (Mocked centers for routing)
+// Comunas de Origen para rutas inferidas
 const ORIGINS = [
   { name: 'Maipú', lat: -33.51, lng: -70.75 },
   { name: 'Puente Alto', lat: -33.61, lng: -70.57 },
@@ -31,15 +45,57 @@ const ORIGINS = [
   { name: 'Santiago Centro', lat: -33.45, lng: -70.65 }
 ];
 
+// Interface para rutas inferidas
+interface InferredRoute {
+  from: { lat: number; lng: number; name: string };
+  to: { lat: number; lng: number; name: string };
+  count: number;
+  avgDuration?: number;
+}
+
+// Comunas data loaded from GeoJSON
+interface ComunaData {
+  name: string;
+  lat: number;
+  lng: number;
+  polygon: [number, number][];
+}
+
 export function GeoIntelligence() {
   const [activeLayers, setActiveLayers] = useState({
     screens: true,
     coverage: false,
     heatmap: false,
     routes: false,
-    gaps: true
+    gaps: true,
+    comunas: false,
+    comunasLabels: false
   });
+  const [comunasData, setComunasData] = useState<ComunaData[]>([]);
+
+  // Load GeoJSON data on mount
+  useEffect(() => {
+    fetch('/data/comunas-santiago.geojson')
+      .then(res => res.json())
+      .then(data => {
+        const comunas = data.features.map((feature: any) => {
+          const coords = feature.geometry.coordinates[0];
+          const polygon = coords.map((coord: [number, number]) => [coord[1], coord[0]] as [number, number]);
+          const centerLat = coords.reduce((sum: number, c: [number, number]) => sum + c[1], 0) / coords.length;
+          const centerLng = coords.reduce((sum: number, c: [number, number]) => sum + c[0], 0) / coords.length;
+          return {
+            name: feature.properties.name,
+            lat: centerLat,
+            lng: centerLng,
+            polygon
+          };
+        });
+        setComunasData(comunas);
+      })
+      .catch(err => console.error('Error loading GeoJSON:', err));
+  }, []);
   const [selectedBrand, setSelectedBrand] = useState('All');
+  const [selectedScreenId, setSelectedScreenId] = useState<number | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -114,6 +170,93 @@ export function GeoIntelligence() {
   const toggleLayer = (layer: keyof typeof activeLayers) => {
     setActiveLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
   };
+
+  // Toggle selección de pantalla para filtrar rutas
+  const toggleScreenSelection = (screenId: number) => {
+    setSelectedScreenId(prev => prev === screenId ? null : screenId);
+  };
+
+  // Inferir rutas desde los datos de detección
+  const inferredRoutes = useMemo(() => {
+    const routes: Map<string, InferredRoute & { vehicles: Set<string>, avgTime: number }> = new Map();
+    
+    // Buscar vehículos que aparecen en múltiples pantallas
+    const vehicleMovements = new Map<string, Array<{ screenId: number; timestamp: Date; brand: string }>>();
+    recentDetections.forEach(det => {
+      const vehicleKey = `${det.vehicle.brand}-${det.vehicle.year}-${Math.floor(Math.random() * 100)}`;
+      const existing = vehicleMovements.get(vehicleKey) || [];
+      existing.push({
+        screenId: det.screenId,
+        timestamp: new Date(det.timestamp),
+        brand: det.vehicle.brand
+      });
+      vehicleMovements.set(vehicleKey, existing);
+    });
+    
+    // Contar rutas entre pantallas
+    vehicleMovements.forEach((movements, vehicleKey) => {
+      if (movements.length < 2) return;
+      
+      // Ordenar por timestamp
+      movements.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      
+      // Crear rutas entre pantallas consecutivas
+      for (let i = 0; i < movements.length - 1; i++) {
+        const fromScreen = SCREENS.find(s => s.id === movements[i].screenId);
+        const toScreen = SCREENS.find(s => s.id === movements[i + 1].screenId);
+        
+        if (!fromScreen || !toScreen || fromScreen.id === toScreen.id) continue;
+        
+        const routeKey = `${fromScreen.id}-${toScreen.id}`;
+        const existing = routes.get(routeKey);
+        const travelTime = (movements[i + 1].timestamp.getTime() - movements[i].timestamp.getTime()) / 60000; // minutos
+        
+        if (existing) {
+          existing.count++;
+          existing.vehicles.add(vehicleKey);
+          existing.avgTime = ((existing.avgTime * (existing.count - 1)) + travelTime) / existing.count;
+        } else {
+          routes.set(routeKey, {
+            from: { lat: fromScreen.lat, lng: fromScreen.lng, name: fromScreen.commune },
+            to: { lat: toScreen.lat, lng: toScreen.lng, name: toScreen.commune },
+            count: 1,
+            vehicles: new Set([vehicleKey]),
+            avgTime: travelTime
+          });
+        }
+      }
+    });
+    
+    // Filtrar rutas con al menos 3 ocurrencias y convertir a array
+    return Array.from(routes.values())
+      .filter(r => r.count >= 3)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 100); // Limitar a 100 rutas más frecuentes
+  }, []);
+
+  // Estadísticas de rutas para el panel
+  const routeStats = useMemo(() => {
+    if (inferredRoutes.length === 0) return null;
+    
+    const totalRoutes = inferredRoutes.length;
+    const totalVehicles = inferredRoutes.reduce((sum, r) => sum + r.count, 0);
+    const topRoute = inferredRoutes[0];
+    const avgRoutesPerVehicle = totalRoutes > 0 ? (totalVehicles / totalRoutes).toFixed(1) : 0;
+    
+    // Agrupar por comuna de origen más frecuente
+    const originCounts = inferredRoutes.reduce((acc, r) => {
+      acc[r.from.name] = (acc[r.from.name] || 0) + r.count;
+      return acc;
+    }, {} as Record<string, number>);
+    const topOrigin = Object.entries(originCounts).sort((a, b) => b[1] - a[1])[0];
+    
+    return { totalRoutes, totalVehicles, topRoute, avgRoutesPerVehicle, topOrigin };
+  }, [inferredRoutes]);
+
+  // Memoizar puntos del heatmap para evitar recreación constante
+  const heatmapPoints = useMemo(() => {
+    return screenStats.map(screen => [screen.lat, screen.lng, screen.score / 100] as [number, number, number]);
+  }, [screenStats]);
 
   // Helper to create custom glowing dot markers
   const createDotIcon = (status: 'high' | 'medium' | 'low') => {
@@ -284,6 +427,39 @@ export function GeoIntelligence() {
             Capas del Mapa
           </h3>
           
+          {/* Panel de Estadísticas de Rutas (solo cuando está activo) */}
+          {activeLayers.routes && routeStats && (
+            <div className="mb-4 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+              <h4 className="text-xs font-semibold text-cyan-400 mb-3 flex items-center gap-2">
+                <Navigation className="w-3 h-3" />
+                Estadísticas de Rutas
+              </h4>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Total rutas:</span>
+                  <strong className="text-white">{routeStats.totalRoutes}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Movimientos:</span>
+                  <strong className="text-white">{routeStats.totalVehicles}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Promedio/ruta:</span>
+                  <strong className="text-white">{routeStats.avgRoutesPerVehicle}</strong>
+                </div>
+                <div className="pt-2 border-t border-cyan-500/30">
+                  <span className="text-slate-400 block mb-1">Ruta más frecuente:</span>
+                  <span className="text-white font-medium">
+                    {routeStats.topRoute?.from.name} → {routeStats.topRoute?.to.name}
+                  </span>
+                  <span className="text-cyan-400 text-xs block">
+                    {routeStats.topRoute?.count} vehículos
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-3">
             <LayerToggle 
               active={activeLayers.screens} 
@@ -291,6 +467,20 @@ export function GeoIntelligence() {
               icon={MapPin}
               label="Pantallas Activas" 
               color="text-lime-400"
+            />
+            <LayerToggle 
+              active={activeLayers.comunas} 
+              onClick={() => toggleLayer('comunas')}
+              icon={Layers}
+              label="Límites de Comunas" 
+              color="text-purple-400"
+            />
+            <LayerToggle 
+              active={activeLayers.comunasLabels} 
+              onClick={() => toggleLayer('comunasLabels')}
+              icon={MapPin}
+              label="Nombres de Comunas" 
+              color="text-purple-300"
             />
             <LayerToggle 
               active={activeLayers.coverage} 
@@ -331,6 +521,30 @@ export function GeoIntelligence() {
               <LegendItem color="#ef4444" label="Bajo Valor (<40 Score)" />
             </div>
           </div>
+          
+          {/* Leyenda de Rutas (solo cuando está activo) */}
+          {activeLayers.routes && (
+            <div className="mt-4 pt-4 border-t border-white/10">
+              <h4 className="text-xs font-semibold text-slate-400 mb-3 uppercase">Leyenda de Rutas</h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-0.5 bg-cyan-400" style={{ boxShadow: "0 0 8px #00e5ff" }}></div>
+                  <span className="text-xs text-slate-300">Ruta inferida</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                  <span className="text-xs text-slate-300">Origen</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                  <span className="text-xs text-slate-300">Destino</span>
+                </div>
+                <p className="text-xs text-slate-500 mt-3 italic">
+                  💡 Haz clic en una pantalla para ver solo sus rutas conectadas.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -347,36 +561,80 @@ export function GeoIntelligence() {
             url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
 
-          {/* Rutas Inferidas (Lines) */}
-          {activeLayers.routes && screenStats.map((screen) => {
-            if (screen.volume < 10) return null; // Only draw for high volume
-            // Randomly pick 1-2 origins to simulate routes for visual effect
-            const origins = ORIGINS.slice(0, (screen.id % 2) + 1);
-            return origins.map((origin, i) => (
+          {/* Rutas Inferidas (Lines) - Basadas en datos reales de detección */}
+          {activeLayers.routes && inferredRoutes
+            .filter(route => {
+              // Si hay una pantalla seleccionada, mostrar solo rutas que conectan con ella
+              if (selectedScreenId !== null) {
+                const selectedScreen = SCREENS.find(s => s.id === selectedScreenId);
+                if (!selectedScreen) return false;
+                return route.from.name === selectedScreen.commune || route.to.name === selectedScreen.commune;
+              }
+              return true;
+            })
+            .map((route, index) => (
               <Polyline 
-                key={"route-" + screen.id + "-" + i}
-                positions={[[origin.lat, origin.lng], [screen.lat, screen.lng]]}
+                key={"route-" + index}
+                positions={[[route.from.lat, route.from.lng], [route.to.lat, route.to.lng]]}
                 pathOptions={{ 
                   color: '#00e5ff', 
-                  weight: 1, 
-                  opacity: 0.3, 
-                  dashArray: '5, 10' 
+                  weight: Math.min(route.count / 3, 3),
+                  opacity: 0.8, 
+                  dashArray: '8, 8' 
                 }}
-              />
-            ));
-          })}
+              >
+                <Popup>
+                  <div className="text-[#0a0a1a] p-2 min-w-[200px]">
+                    <h3 className="font-bold text-sm mb-2 flex items-center gap-2">
+                      <Navigation className="w-4 h-4 text-cyan-600" />
+                      Ruta Inferida
+                    </h3>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span><strong>Origen:</strong> {route.from.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                        <span><strong>Destino:</strong> {route.to.name}</span>
+                      </div>
+                      <div className="border-t border-slate-300 pt-2 mt-2">
+                        <div className="flex justify-between">
+                          <span className="opacity-70">Vehículos:</span>
+                          <strong className="text-cyan-600">{route.count}</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-70">Tiempo promedio:</span>
+                          <strong>{Math.round(route.avgTime)} min</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="opacity-70">Frecuencia:</span>
+                          <strong>{(route.count / 7).toFixed(1)}/día</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Popup>
+              </Polyline>
+            ))}
 
-          {/* Heatmap (CircleMarkers) */}
-          {activeLayers.heatmap && screenStats.map(screen => (
-            <CircleMarker
-              key={"heat-" + screen.id}
-              center={[screen.lat, screen.lng]}
-              radius={Math.max(screen.volume * 0.5, 10)}
-              fillColor="#ff4500"
-              color="none"
-              fillOpacity={0.2}
+          {/* Heatmap con gradientes suaves */}
+          {activeLayers.heatmap && screenStats.length > 0 && (
+            <HeatmapLayer
+              points={heatmapPoints}
+              radius={50}
+              blur={30}
+              maxZoom={14}
+              gradient={{
+                0.0: '#1e3a5f',
+                0.2: '#0891b2',
+                0.4: '#22c55e',
+                0.6: '#eab308',
+                0.8: '#f97316',
+                1.0: '#dc2626'
+              }}
             />
-          ))}
+          )}
 
           {/* Cobertura (Circles) */}
           {activeLayers.coverage && screenStats.map(screen => (
@@ -400,6 +658,13 @@ export function GeoIntelligence() {
               key={"marker-" + screen.id}
               position={[screen.lat, screen.lng]}
               icon={createDotIcon(screen.status)}
+              eventHandlers={{
+                click: () => {
+                  if (activeLayers.routes) {
+                    toggleScreenSelection(screen.id);
+                  }
+                }
+              }}
             >
               <Popup className="custom-popup bg-navy-900 border-white/10 text-white rounded-xl">
                 <div className="p-1 min-w-[150px]">
@@ -417,9 +682,93 @@ export function GeoIntelligence() {
                       }>{screen.score}/100</strong>
                     </div>
                   </div>
+                  {activeLayers.routes && (
+                    <div className="mt-2 pt-2 border-t border-slate-300">
+                      <p className="text-xs text-slate-500">
+                        💡 Haz clic para ver solo las rutas de esta pantalla
+                      </p>
+                    </div>
+                  )}
                 </div>
               </Popup>
             </Marker>
+          ))}
+          
+          {/* Indicador de pantalla seleccionada */}
+          {selectedScreenId !== null && activeLayers.routes && (
+            <Marker
+              position={[-33.40, -70.58]}
+              icon={L.divIcon({
+                className: 'selected-screen-indicator',
+                html: `<div style="
+                  background: linear-gradient(135deg, #f472b6, #ec4899);
+                  color: white;
+                  padding: 12px 24px;
+                  border-radius: 12px;
+                  font-size: 13px;
+                  font-weight: 600;
+                  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.5);
+                  white-space: nowrap;
+                  backdrop-filter: blur(8px);
+                  border: 1px solid rgba(255,255,255,0.2);
+                ">
+                  📍 ${SCREENS.find(s => s.id === selectedScreenId)?.commune} – Haz clic en otra pantalla o aquí para limpiar
+                </div>`,
+                iconSize: [450, 50],
+                iconAnchor: [225, 25]
+              })}
+              eventHandlers={{
+                click: () => setSelectedScreenId(null)
+              }}
+            />
+          )}
+
+          {/* Comunas (Labels + Polygons from GeoJSON) */}
+          {activeLayers.comunas && comunasData.map(comuna => (
+            <Polygon
+              key={"comuna-" + comuna.name}
+              positions={comuna.polygon}
+              pathOptions={{
+                color: '#a855f7',
+                fillColor: '#a855f7',
+                fillOpacity: 0.08,
+                weight: 2,
+              }}
+            >
+              <Popup>
+                <div className="text-[#0a0a1a] p-1">
+                  <h3 className="font-bold text-sm mb-1">{comuna.name}</h3>
+                </div>
+              </Popup>
+            </Polygon>
+          ))}
+          
+          {/* Comunas Labels - Nombres visibles en el mapa */}
+          {activeLayers.comunasLabels && comunasData.map(comuna => (
+            <Marker
+              key={"label-" + comuna.name}
+              position={[comuna.lat, comuna.lng]}
+              icon={L.divIcon({
+                className: 'comuna-label',
+                html: `<div style="
+                  background-color: rgba(168, 85, 247, 0.9);
+                  padding: 6px 12px;
+                  border-radius: 6px;
+                  font-size: 12px;
+                  font-weight: 700;
+                  color: white;
+                  white-space: nowrap;
+                  border: 1px solid rgba(255,255,255,0.4);
+                  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+                  backdrop-filter: blur(4px);
+                ">${comuna.name}</div>`,
+                iconSize: [comuna.name.length * 8 + 10, 24],
+                iconAnchor: [(comuna.name.length * 8 + 10) / 2, 12],
+                popupAnchor: [0, -12]
+              })}
+              zIndexOffset={1000}
+            />
           ))}
 
           {/* Huecos de Cobertura */}
