@@ -87,7 +87,10 @@ body {
 /* Mobile sidebar overlay */
 .mobile-sidebar-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background: rgba(0, 0, 0, 0.3);
   z-index: 45;
   opacity: 0;
@@ -99,6 +102,13 @@ body {
 .mobile-sidebar-overlay.active {
   opacity: 1;
   visibility: visible;
+  left: 280px;
+}
+
+@media (max-width: 768px) {
+  .mobile-sidebar-overlay.active {
+    left: 85vw;
+  }
 }
 
 /* Mobile sidebar */
