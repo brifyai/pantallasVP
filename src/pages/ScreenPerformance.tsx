@@ -242,30 +242,30 @@ export function ScreenPerformance() {
                     <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Interpretación del Score</h3>
                     <div className="space-y-3">
                       <div className="flex items-center gap-4 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-xl p-4">
-                        <div className="w-12 h-12 rounded-full bg-[#00ff88] flex items-center justify-center text-black font-bold text-lg">
+                        <div className="w-12 h-12 rounded-full bg-[#00ff88] flex items-center justify-center text-black font-bold text-base whitespace-nowrap">
                           70+
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <p className="text-[#00ff88] font-semibold">Alto Valor</p>
                           <p className="text-sm text-gray-300">Ideal para marcas de lujo, tecnología, bancos premium. Audiencia AB.</p>
                         </div>
                       </div>
                       
                       <div className="flex items-center gap-4 bg-[#00e5ff]/10 border border-[#00e5ff]/30 rounded-xl p-4">
-                        <div className="w-12 h-12 rounded-full bg-[#00e5ff] flex items-center justify-center text-black font-bold text-lg">
+                        <div className="w-12 h-12 rounded-full bg-[#00e5ff] flex items-center justify-center text-black font-bold text-[11px] whitespace-nowrap">
                           40-69
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <p className="text-[#00e5ff] font-semibold">Valor Medio</p>
                           <p className="text-sm text-gray-300">Ideal para retail, consumo masivo, telecomunicaciones. Audiencia C1-C2.</p>
                         </div>
                       </div>
                       
                       <div className="flex items-center gap-4 bg-[#ff00e5]/10 border border-[#ff00e5]/30 rounded-xl p-4">
-                        <div className="w-12 h-12 rounded-full bg-[#ff00e5] flex items-center justify-center text-white font-bold text-lg">
+                        <div className="w-12 h-12 rounded-full bg-[#ff00e5] flex items-center justify-center text-white font-bold text-base whitespace-nowrap">
                           0-39
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <p className="text-[#ff00e5] font-semibold">Bajo Valor</p>
                           <p className="text-sm text-gray-300">Ideal para marcas de descuento, servicios básicos. Audiencia C3-D.</p>
                         </div>
