@@ -8,7 +8,9 @@ import {
   Activity, 
   DollarSign,
   Car,
-  Target
+  Target,
+  Info,
+  X
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -25,7 +27,6 @@ import {
 import { SCREENS, recentDetections, PREMIUM_BRANDS } from '../data/mockData';
 import { cn } from '../utils/cn';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 // Fix leaflet icon issue
@@ -47,6 +48,7 @@ const customIcon = new L.Icon({
 
 export function ScreenPerformance() {
   const [selectedScreenId, setSelectedScreenId] = useState<number | null>(null);
+  const [showScoreInfo, setShowScoreInfo] = useState(false);
 
   // Calculate metrics for all screens
   const screenMetrics = useMemo(() => {
@@ -144,6 +146,160 @@ export function ScreenPerformance() {
         </div>
       </div>
 
+      {/* Info Modal del Score */}
+      <AnimatePresence>
+        {showScoreInfo && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+              onClick={() => setShowScoreInfo(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+              onClick={() => setShowScoreInfo(false)}
+            >
+              <div 
+                className="bg-[rgba(10,10,26,0.98)] backdrop-blur-xl border border-white/10 rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto pointer-events-auto shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="sticky top-0 bg-[#0a0a1a]/95 backdrop-blur border-b border-white/10 p-6 flex items-center justify-between z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-cyan-500/20 to-magenta-500/20 border border-cyan-500/30">
+                      <Info className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <h2 className="text-xl font-bold text-white">¿Qué es el Ad Score?</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowScoreInfo(false)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5 text-gray-400" />
+                  </button>
+                </div>
+                
+                <div className="p-6 space-y-6">
+                  {/* Definición */}
+                  <div className="bg-gradient-to-r from-cyan-500/10 to-magenta-500/10 border border-cyan-500/20 rounded-xl p-5">
+                    <p className="text-white font-medium leading-relaxed">
+                      El <strong className="text-cyan-400">Ad Score</strong> es un puntaje del <strong className="text-white">0 al 100</strong> que mide el <strong className="text-emerald-400">valor publicitario</strong> de una pantalla digital, basado en el tráfico vehicular y el perfil de los vehículos que transitan por su ubicación.
+                    </p>
+                  </div>
+
+                  {/* Componentes */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Componentes del Score</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-navy-900/50 border border-white/10 rounded-xl p-5">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="p-2 rounded-lg bg-cyan-500/20 border border-cyan-500/30">
+                            <Activity className="w-5 h-5 text-cyan-400" />
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold">Volumen (40%)</p>
+                            <p className="text-xs text-gray-400">Peso en el score</p>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed">
+                          Cantidad total de vehículos que transitan por la pantalla. A mayor volumen, mayor alcance potencial de la campaña publicitaria.
+                        </p>
+                      </div>
+                      
+                      <div className="bg-navy-900/50 border border-white/10 rounded-xl p-5">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="p-2 rounded-lg bg-magenta-500/20 border border-magenta-500/30">
+                            <Car className="w-5 h-5 text-magenta-400" />
+                          </div>
+                          <div>
+                            <p className="text-white font-semibold">Premium Ratio (60%)</p>
+                            <p className="text-xs text-gray-400">Peso en el score</p>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-300 leading-relaxed">
+                          Porcentaje de vehículos de marcas premium (BMW, Mercedes, Audi, etc.). Indica el poder adquisitivo de la audiencia.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fórmula */}
+                  <div className="bg-navy-900/50 border border-white/10 rounded-xl p-5">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Fórmula</h3>
+                    <div className="bg-black/30 rounded-lg p-4 font-mono text-center">
+                      <p className="text-cyan-400 text-lg">
+                        Ad Score = (Volumen Score × 0.4) + (Premium Ratio × 60)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Interpretación */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Interpretación del Score</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-4 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-xl p-4">
+                        <div className="w-12 h-12 rounded-full bg-[#00ff88] flex items-center justify-center text-black font-bold text-lg">
+                          70+
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[#00ff88] font-semibold">Alto Valor</p>
+                          <p className="text-sm text-gray-300">Ideal para marcas de lujo, tecnología, bancos premium. Audiencia AB.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4 bg-[#00e5ff]/10 border border-[#00e5ff]/30 rounded-xl p-4">
+                        <div className="w-12 h-12 rounded-full bg-[#00e5ff] flex items-center justify-center text-black font-bold text-lg">
+                          40-69
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[#00e5ff] font-semibold">Valor Medio</p>
+                          <p className="text-sm text-gray-300">Ideal para retail, consumo masivo, telecomunicaciones. Audiencia C1-C2.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4 bg-[#ff00e5]/10 border border-[#ff00e5]/30 rounded-xl p-4">
+                        <div className="w-12 h-12 rounded-full bg-[#ff00e5] flex items-center justify-center text-white font-bold text-lg">
+                          0-39
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[#ff00e5] font-semibold">Bajo Valor</p>
+                          <p className="text-sm text-gray-300">Ideal para marcas de descuento, servicios básicos. Audiencia C3-D.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ejemplos */}
+                  <div className="bg-gradient-to-br from-magenta-500/10 to-purple-500/10 border border-magenta-500/20 rounded-xl p-5">
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Ejemplos Prácticos</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-navy-900/50 rounded-lg">
+                        <div>
+                          <p className="text-white font-medium">Vitacura / Las Condes</p>
+                          <p className="text-xs text-gray-400">3000 vehículos/día, 45% premium</p>
+                        </div>
+                        <div className="px-3 py-1 bg-[#00ff88] text-black rounded-lg font-bold">85/100</div>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-navy-900/50 rounded-lg">
+                        <div>
+                          <p className="text-white font-medium">Puente Alto / La Florida</p>
+                          <p className="text-xs text-gray-400">5000 vehículos/día, 12% premium</p>
+                        </div>
+                        <div className="px-3 py-1 bg-[#00e5ff] text-black rounded-lg font-bold">42/100</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {!selectedScreenId ? (
           <motion.div 
@@ -179,7 +335,16 @@ export function ScreenPerformance() {
 
                 <div className="flex justify-between items-end mb-4">
                   <div>
-                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Ad Score</p>
+                    <div className="flex items-center gap-2 mb-1">
+                      <p className="text-xs text-slate-500 uppercase tracking-wider">Ad Score</p>
+                      <button
+                        onClick={() => setShowScoreInfo(true)}
+                        className="p-0.5 hover:bg-white/10 rounded transition-colors"
+                        title="¿Qué es el Ad Score?"
+                      >
+                        <Info className="w-3.5 h-3.5 text-cyan-400" />
+                      </button>
+                    </div>
                     <div className={cn(
                       "text-2xl font-bold border px-3 py-1 rounded-lg inline-block",
                       getScoreColor(screen.adScore)
@@ -245,11 +410,20 @@ export function ScreenPerformance() {
                           <MapPin className="w-4 h-4" /> {selectedScreen.commune}
                         </p>
                       </div>
-                      <div className={cn(
-                        "ml-auto px-4 py-2 rounded-xl font-bold text-xl",
-                        getScoreBg(selectedScreen.adScore)
-                      )}>
-                        Score: {selectedScreen.adScore}
+                      <div className="flex items-center gap-2">
+                        <div className={cn(
+                          "ml-auto px-4 py-2 rounded-xl font-bold text-xl",
+                          getScoreBg(selectedScreen.adScore)
+                        )}>
+                          Score: {selectedScreen.adScore}
+                        </div>
+                        <button
+                          onClick={() => setShowScoreInfo(true)}
+                          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                          title="¿Qué es el Ad Score?"
+                        >
+                          <Info className="w-5 h-5 text-cyan-400" />
+                        </button>
                       </div>
                     </div>
                   </div>
