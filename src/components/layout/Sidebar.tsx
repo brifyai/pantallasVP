@@ -34,7 +34,7 @@ import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 
 const NAV_ITEMS = [
-  { path: '/dashboard', icon: LayoutDashboard, label: 'Command Center' },
+  { path: '/dashboard', icon: LayoutDashboard, label: 'Resumen' },
   { path: '/brand', icon: BarChart2, label: 'Brand Intelligence' },
   { path: '/screen', icon: MonitorPlay, label: 'Screen Performance' },
   { path: '/geo', icon: Map, label: 'Geo Intelligence' },
@@ -282,7 +282,7 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                 iconColor="text-amber-400"
                 title="Guía de Inicio Rápido"
                 items={[
-                  { title: '1. Explora el Command Center', content: 'Comienza por el panel principal para ver los KPIs en tiempo real y tener una visión general del tráfico y rendimiento de tu negocio.' },
+                  { title: '1. Explora el Resumen', content: 'Comienza por el panel principal para ver los KPIs en tiempo real y tener una visión general del tráfico y rendimiento de tu negocio.' },
                   { title: '2. Analiza tu Competencia', content: 'Usa Brand Intelligence para comparar el share de tráfico de diferentes marcas y entender tu posición en el mercado.' },
                   { title: '3. Encuentra la Ubicación Perfecta', content: 'Geo Intelligence te muestra el mapa de calor de Santiago para identificar las zonas de mayor tráfico según tu target.' },
                   { title: '4. Genera Propuestas con IA', content: 'Sales Intelligence crea propuestas de valor automáticas basadas en datos reales de audiencia para tus clientes.' }
@@ -296,7 +296,7 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                 iconColor="text-cyan-400"
                 title="Módulos de la Aplicación"
                 items={[
-                  { title: 'Command Center', content: 'Panel principal con KPIs en tiempo real, flujo de vehículos, y métricas clave del negocio. Incluye: KPIs principales (Ingresos, Utilidad, ROI, Ticket Promedio), Gráfico de flujo de vehículos en tiempo real, Top 5 marcas con mayor tráfico, Distribución por tipo de vehículo, Mapa de calor semanal por hora.' },
+                  { title: 'Resumen', content: 'Panel principal con KPIs en tiempo real, flujo de vehículos, y métricas clave del negocio. Incluye: KPIs principales (Ingresos, Utilidad, ROI, Ticket Promedio), Gráfico de flujo de vehículos en tiempo real, Top 5 marcas con mayor tráfico, Distribución por tipo de vehículo, Mapa de calor semanal por hora.' },
                   { title: 'Brand Intelligence', content: 'Análisis competitivo de marcas. Compara share, crecimiento y dominancia por zona. Incluye: Share de tráfico por marca, Crecimiento interanual (YoY), Dominancia por comuna, Top 10 marcas por volumen, Filtros por segmento (Premium, Mass, etc.).' },
                   { title: 'Screen Performance', content: 'Mide el rendimiento de cada pantalla individualmente. Incluye: Vehículos únicos por pantalla, Horarios peak de cada ubicación, Composición de marcas por pantalla, Comparativa entre pantallas, Métricas de retención visual.' },
                   { title: 'Geo Intelligence', content: 'Análisis geográfico avanzado con mapas de calor y distribución territorial. Incluye: Mapa interactivo de Santiago, Heatmap por densidad de tráfico, Filtros por tipo de vehículo y marca, Información detallada por comuna, Capas de transporte público.' },
@@ -315,7 +315,7 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                   { title: '¿Cómo se calcula el Share de Tráfico?', content: 'El Share se calcula dividiendo el número de vehículos detectados de una marca entre el total de vehículos del segmento seleccionado, multiplicado por 100. Los datos provienen de nuestros sensores en tiempo real instalados en cada pantalla.' },
                   { title: '¿Qué significa el CPM estimado?', content: 'El CPM (Costo Por Mil impresiones) estimado se calcula basándose en el volumen de tráfico detectado, la ubicación de la pantalla, el perfil socioeconómico de la zona y el tipo de vehículos que transitan por el sector.' },
                   { title: '¿Cómo usar el Audience Match?', content: 'En Sales Intelligence, selecciona el perfil de audiencia objetivo (Premium, Familiar, Joven, Masivo) y el sistema analizará los patrones de tráfico para recomendarte las 3 mejores pantallas. Cada recomendación incluye un score de match y la razón específica.' },
-                  { title: '¿Los datos son en tiempo real?', content: 'Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Los KPIs del Command Center y las alertas se actualizan automáticamente. Algunos análisis históricos y comparativos pueden tener un delay de 24 horas para procesamiento de datos.' },
+                  { title: '¿Los datos son en tiempo real?', content: 'Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Los KPIs del Resumen y las alertas se actualizan automáticamente. Algunos análisis históricos y comparativos pueden tener un delay de 24 horas para procesamiento de datos.' },
                   { title: '¿Puedo exportar los reportes?', content: 'Sí, todos los módulos permiten exportar datos en formato CSV. También puedes generar reportes PDF personalizados con tu branding desde el botón superior de cada página.' },
                   { title: '¿Qué es la Time Machine?', content: "Time Machine es una herramienta que te permite comparar períodos temporales diferentes y predecir tráfico futuro usando IA. Incluye la 'Cápsula del Tiempo' para revivir fechas específicas y analizar tendencias estacionales." },
                   { title: '¿Cómo funciona el Competitor Tracker?', content: 'En Sales Intelligence, selecciona una marca y el sistema mostrará un gráfico comparativo del tráfico de esa marca vs sus competidores directos en diferentes pantallas. Incluye insights estratégicos para identificar oportunidades de ataque.' },

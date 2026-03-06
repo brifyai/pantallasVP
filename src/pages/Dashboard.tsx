@@ -64,7 +64,7 @@ export function Dashboard() {
     <div className="max-w-[1600px] mx-auto space-y-4 md:space-y-6 relative z-10">
       {/* Header Section */}
       <div className="mb-4 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2 drop-shadow-md">Command Center</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 md:mb-2 drop-shadow-md">Resumen</h1>
         <p className="text-gray-400 text-sm md:text-base">Inteligencia vehicular y optimización OOH en tiempo real.</p>
       </div>
 
