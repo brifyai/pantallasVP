@@ -1374,7 +1374,7 @@ export function SalesIntelligence() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-cyan-500/10 to-magenta-500/10 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between"
+        className="bg-navy-900/90 backdrop-blur-md border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between shadow-lg"
       >
         <div className="flex items-center gap-3">
           <div className="p-2 bg-cyan-500/20 rounded-lg">
