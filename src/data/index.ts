@@ -4,6 +4,7 @@ export * from './rubros';
 export * from './agencias';
 export * from './marcas';
 export * from './vendedores';
+export * from './unifiedData';
 
 // Utilidad para obtener información completa de una marca con rubro y agencia
 import { MARCAS, Marca, getMarcaById } from './marcas';
