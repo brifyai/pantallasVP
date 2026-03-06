@@ -9,6 +9,8 @@ import { TimeMachine } from './pages/TimeMachine';
 import { Settings } from './pages/Settings';
 import { Team } from './pages/Team';
 import { Insights } from './pages/Insights';
+import { AdminMarcas } from './pages/AdminMarcas';
+import { AdminVendedores } from './pages/AdminVendedores';
 
 export function App() {
   return (
@@ -24,6 +26,8 @@ export function App() {
           <Route path="time" element={<TimeMachine />} />
           <Route path="team" element={<Team />} />
           <Route path="insights" element={<Insights />} />
+          <Route path="admin/marcas" element={<AdminMarcas />} />
+          <Route path="admin/vendedores" element={<AdminVendedores />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

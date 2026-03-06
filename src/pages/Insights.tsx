@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import {
@@ -21,14 +21,21 @@ import {
   AlertTriangle,
   Sparkles,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Building2,
+  Tag,
+  Briefcase
 } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { MARCAS, getMarcaById } from '../data/marcas';
+import { RUBROS, getRubroById } from '../data/rubros';
+import { AGENCIAS, getAgenciaById, isDirecto } from '../data/agencias';
+import { VENDEDORES, getVendedorById, getVendedorByMarca } from '../data/vendedores';
 
 // Tipos
 interface Insight {
   id: string;
-  type: 'opportunity' | 'alert' | 'trend' | 'inventory' | 'competitor';
+  type: 'oportunidad' | 'alerta' | 'tendencia' | 'inventario' | 'competencia';
   priority: 'alta' | 'media' | 'baja';
   title: string;
   description: string;
@@ -47,217 +54,171 @@ interface Insight {
   reasoning?: string;
   targetBrand?: string;
   targetIndustry?: string;
+  vendedorId?: string;
+  agenciaId?: string;
 }
 
-// Datos mock de insights unificados
-const INSIGHTS_DATA: Insight[] = [
-  // Oportunidad Destacada del Día
-  {
-    id: 'opp-1',
-    type: 'opportunity',
-    priority: 'alta',
-    title: 'Oportunidad Premium - Vitacura',
-    description: 'Los días Martes y Jueves entre las 07:00 y 09:00 hrs, el 42% de los vehículos detectados en Vitacura pertenecen a marcas premium. Existe un segmento no explotado para aseguradoras de alta gama.',
-    location: 'Vitacura - Av. Kennedy',
-    timeframe: 'Martes y Jueves 07:00-09:00 hrs',
-    audience: '~2.500 vehículos premium/semana',
-    estimatedValue: 2100000,
-    action: 'Generar propuesta para aseguradoras premium',
-    icon: Lightbulb,
-    color: 'text-magenta-400',
-    gradient: 'from-magenta-500/20 to-purple-500/20',
-    data: [
-      { label: 'Tráfico Promedio', value: '15.000 vehículos/día' },
-      { label: 'Segmento Premium', value: '42%' },
-      { label: 'Retención Visual', value: '78%' },
-      { label: 'CPM Estimado', value: '$3.200' }
-    ],
-    reasoning: 'El análisis de patrones revela que el 68% de los vehículos premium residen en Vitacura, Lo Barnechea o Las Condes. Este segmento presenta una tasa de conversión 2.3x superior al promedio.',
-    targetIndustry: 'Seguros de Alta Gama'
-  },
-  // Alertas en Tiempo Real
-  {
-    id: 'alert-1',
-    type: 'alert',
-    priority: 'alta',
-    title: 'Aumento de Vehículos Eléctricos',
-    description: 'Nueva tendencia detectada: aumento del 34% de vehículos eléctricos e híbridos en pantalla Vitacura durante el último mes.',
-    location: 'Vitacura',
-    timeframe: 'Últimos 30 días',
-    icon: Zap,
-    color: 'text-lime-400',
-    gradient: 'from-lime-500/20 to-green-500/20',
-    data: [
-      { label: 'Crecimiento', value: '+34%' },
-      { label: 'Vehículos Detectados', value: '890/mes' }
-    ],
-    reasoning: 'El crecimiento de vehículos eléctricos coincide con las nuevas políticas de movilidad sustentable. Oportunidad para marcas de tecnología verde.'
-  },
-  {
-    id: 'alert-2',
-    type: 'trend',
-    priority: 'media',
-    title: 'Concentración SUV Premium',
-    description: 'Los SUV premium se concentran en pantallas Las Condes y Lo Barnechea entre 17:00-20:00 hrs con un 58% del flujo total.',
-    location: 'Las Condes / Lo Barnechea',
-    timeframe: '17:00-20:00 hrs',
-    icon: TrendingUp,
-    color: 'text-cyan-400',
-    gradient: 'from-cyan-500/20 to-blue-500/20',
-    data: [
-      { label: 'SUVs Premium', value: '58%' },
-      { label: 'Vehículos/día', value: '3.200' }
-    ]
-  },
-  {
-    id: 'alert-3',
-    type: 'competitor',
-    priority: 'alta',
-    title: 'Dominancia de Toyota',
-    description: 'Toyota domina la ruta Providencia → Costanera Norte con un 22% del flujo total en horario AM.',
-    location: 'Providencia - Costanera Norte',
-    timeframe: '07:00-09:00 hrs',
-    icon: Target,
-    color: 'text-rose-400',
-    gradient: 'from-rose-500/20 to-red-500/20',
-    data: [
-      { label: 'Share Toyota', value: '22%' },
-      { label: 'Vehículos/día', value: '4.500' }
-    ],
-    targetBrand: 'Toyota',
-    reasoning: 'Oportunidad para marcas competidoras (Nissan, Mazda, Hyundai) de interceptar audiencia en esta ruta.'
-  },
-  // Inventario No Vendido - Recomendaciones IA
-  {
-    id: 'inv-1',
-    type: 'inventory',
-    priority: 'alta',
-    title: 'P-045 Quilicura - Oportunidad Logística',
-    description: 'Pantalla con 78% de disponibilidad en Q2. Alto tráfico de vehículos comerciales livianos detectado.',
-    location: 'Quilicura',
-    timeframe: 'Q2 2025',
-    estimatedValue: 4500000,
-    action: 'Contactar gerente de marketing',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Disponibilidad', value: '78%' },
-      { label: 'Vehículos Comerciales', value: '3x promedio' }
-    ],
-    reasoning: 'El análisis histórico muestra que esta zona tiene 3x más vehículos de reparto que el promedio. Empresas de logística aumentaron su inversión en OOH un 45% el último trimestre.',
-    targetIndustry: 'Logística y Transporte',
-    targetBrand: 'Starken / Chilexpress'
-  },
-  {
-    id: 'inv-2',
-    type: 'inventory',
-    priority: 'media',
-    title: 'P-052 La Pintana - Retail de Descuento',
-    description: 'Zona con crecimiento del 23% en tráfico de vehículos segmento C. Pantalla disponible desde Abril.',
-    location: 'La Pintana',
-    timeframe: 'Desde Abril 2025',
-    estimatedValue: 3200000,
-    action: 'Preparar propuesta con datos de tráfico',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Crecimiento Tráfico', value: '+23%' },
-      { label: 'Segmento', value: 'C2-C3' }
-    ],
-    reasoning: 'El perfil socioeconómico de la zona coincide con el target de retail de descuento. Competencia directa (Falabella) tuvo +31% de tráfico con campaña similar en zona sur.',
-    targetIndustry: 'Retail de Descuento',
-    targetBrand: 'Hites / Paris'
-  },
-  {
-    id: 'inv-3',
-    type: 'inventory',
-    priority: 'alta',
-    title: 'P-018 Puente Alto - Upsell Automotriz',
-    description: 'Cliente actual Chevrolet tiene 65% de share en la pantalla. Oportunidad de vender slots restantes a competencia.',
-    location: 'Puente Alto',
-    timeframe: 'Disponible inmediatamente',
-    estimatedValue: 5000000,
-    action: 'Agendar reunión con Nissan',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Share Chevrolet', value: '65%' },
-      { label: 'Crecimiento Nissan', value: '+12% YoY' }
-    ],
-    reasoning: 'La pantalla tiene alta efectividad para el segmento automotriz. Nissan no tiene presencia en esta zona y su cuota de mercado ha crecido 12% YoY.',
-    targetIndustry: 'Automotriz',
-    targetBrand: 'Nissan / Mazda / Hyundai'
-  },
-  {
-    id: 'inv-4',
-    type: 'inventory',
-    priority: 'media',
-    title: 'P-007 Vitacura - Bancos Premium',
-    description: 'Pantalla premium con disponibilidad en Mayo. Históricamente alto tráfico de vehículos premium en este periodo.',
-    location: 'Vitacura',
-    timeframe: 'Mayo 2025',
-    estimatedValue: 8500000,
-    action: 'Enviar case study de Vitacura',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Tráfico Premium', value: 'Alto en Mayo' },
-      { label: 'Segmento', value: 'AB' }
-    ],
-    reasoning: 'Mayo es el mes peak para productos de inversión. Itaú lanzó nueva línea de wealth management y no tiene presencia en pantallas premium del sector oriente.',
-    targetIndustry: 'Bancos Premium',
-    targetBrand: 'Banco Itaú / Scotiabank'
-  },
-  {
-    id: 'inv-5',
-    type: 'inventory',
-    priority: 'alta',
-    title: 'P-033 Providencia - Inmobiliarias',
-    description: 'Pantalla con 82% de vehículos segmento AB. Disponible las próximas 3 semanas.',
-    location: 'Providencia',
-    timeframe: 'Próximas 3 semanas',
-    estimatedValue: 6200000,
-    action: 'Contactar con propuesta personalizada',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Segmento AB', value: '82%' },
-      { label: 'Disponibilidad', value: '3 semanas' }
-    ],
-    reasoning: 'El perfil de audiencia coincide exactamente con compradores de proyectos inmobiliarios premium. Paic tiene 2 proyectos nuevos en la zona y no ha invertido en OOH este año.',
-    targetIndustry: 'Inmobiliarias',
-    targetBrand: 'Paic / Ilunion / Besalco'
-  },
-  {
-    id: 'inv-6',
-    type: 'inventory',
-    priority: 'baja',
-    title: 'P-041 Ñuñoa - Movilidad Eléctrica',
-    description: 'Aumento del 34% en vehículos eléctricos en la zona. Pantalla con disponibilidad parcial.',
-    location: 'Ñuñoa',
-    timeframe: 'Q3 2025',
-    estimatedValue: 4000000,
-    action: 'Monitorear y contactar en Q3',
-    icon: Brain,
-    color: 'text-amber-400',
-    gradient: 'from-amber-500/20 to-orange-500/20',
-    data: [
-      { label: 'Crecimiento EV', value: '+34%' },
-      { label: 'Disponibilidad', value: 'Parcial' }
-    ],
-    reasoning: 'Ñuñoa es la comuna con mayor crecimiento de vehículos eléctricos en Santiago. Tesla está en proceso de expansión y necesita visibilidad en zonas de alto potencial.',
-    targetIndustry: 'Movilidad Eléctrica',
-    targetBrand: 'Tesla / BYD / Volvo'
-  }
-];
+// Generador de insights basado en data real
+const generateInsightsFromData = (): Insight[] => {
+  const insights: Insight[] = [];
+
+  // Insights por marca con vendedor asignado
+  MARCAS.filter(m => m.activo).forEach(marca => {
+    const rubro = getRubroById(marca.rubroId);
+    const agencia = getAgenciaById(marca.agenciaId);
+    const vendedor = getVendedorByMarca(marca.id);
+
+    // Insight de oportunidad por rubro
+    if (rubro) {
+      insights.push({
+        id: `opp-${marca.id}`,
+        type: 'oportunidad',
+        priority: 'alta',
+        title: `${marca.nombre} - Oportunidad en ${rubro.nombre}`,
+        description: `${marca.nombre} tiene alta presencia en zonas de tráfico premium. Se recomienda reforzar campaña en pantallas de Vitacura y Las Condes para maximizar reach del segmento AB.`,
+        location: 'Vitacura / Las Condes',
+        timeframe: 'Próximas 4 semanas',
+        estimatedValue: Math.floor(Math.random() * 5000000) + 3000000,
+        action: `Contactar a ${agencia?.nombre || 'agencia'} para renovar campaña`,
+        icon: Lightbulb,
+        color: marca.color ? `text-[${marca.color}]` : 'text-cyan-400',
+        gradient: `from-${marca.color || '06b6d4'}/20 to-magenta-500/20`,
+        data: [
+          { label: 'Share Tráfico', value: `${Math.floor(Math.random() * 30) + 10}%` },
+          { label: 'Retención Visual', value: `${Math.floor(Math.random() * 20) + 70}%` },
+          { label: 'Reach Semanal', value: `${Math.floor(Math.random() * 50000) + 20000}` },
+          { label: 'CPM Est.', value: `$${Math.floor(Math.random() * 2000) + 1500}` }
+        ],
+        reasoning: `El análisis de tráfico muestra que ${marca.nombre} tiene alta penetración en el rubro ${rubro.nombre.toLowerCase()}. La audiencia detectada coincide con el target de la marca.`,
+        targetIndustry: rubro.nombre,
+        targetBrand: marca.nombre,
+        vendedorId: vendedor?.id,
+        agenciaId: agencia?.id
+      });
+    }
+
+    // Insight de competencia para marcas del mismo rubro
+    const marcasMismoRubro = MARCAS.filter(m => m.rubroId === marca.rubroId && m.id !== marca.id && m.activo);
+    if (marcasMismoRubro.length > 0 && Math.random() > 0.5) {
+      const competidor = marcasMismoRubro[Math.floor(Math.random() * marcasMismoRubro.length)];
+      insights.push({
+        id: `comp-${marca.id}-${competidor.id}`,
+        type: 'competencia',
+        priority: 'media',
+        title: `${marca.nombre} vs ${competidor.nombre}`,
+        description: `${competidor.nombre} ha aumentado su presencia en un 15% durante el último mes. Oportunidad de contra-atacar con campaña focalizada.`,
+        location: 'Providencia / Ñuñoa',
+        timeframe: 'Últimos 30 días',
+        estimatedValue: Math.floor(Math.random() * 3000000) + 2000000,
+        action: `Generar propuesta defensiva para ${marca.nombre}`,
+        icon: Target,
+        color: 'text-rose-400',
+        gradient: 'from-rose-500/20 to-red-500/20',
+        data: [
+          { label: `Share ${competidor.nombre}`, value: `${Math.floor(Math.random() * 20) + 15}%` },
+          { label: 'Crecimiento', value: '+15%' },
+          { label: 'Pantallas Activas', value: `${Math.floor(Math.random() * 10) + 3}` }
+        ],
+        reasoning: `${competidor.nombre} está invirtiendo más en zonas estratégicas. Se recomienda aumentar frecuencia en pantallas clave para mantener liderazgo.`,
+        targetIndustry: rubro?.nombre,
+        targetBrand: marca.nombre,
+        vendedorId: vendedor?.id,
+        agenciaId: agencia?.id
+      });
+    }
+  });
+
+  // Insights de inventario disponible
+  const pantallasDisponibles = [
+    { id: 'P-045', location: 'Quilicura', segment: 'C2-C3' },
+    { id: 'P-052', location: 'La Pintana', segment: 'C3' },
+    { id: 'P-018', location: 'Puente Alto', segment: 'C2' },
+    { id: 'P-007', location: 'Vitacura', segment: 'AB' },
+    { id: 'P-033', location: 'Providencia', segment: 'AB' }
+  ];
+
+  pantallasDisponibles.forEach(pantalla => {
+    const marcasPotenciales = MARCAS.filter(m => m.activo && Math.random() > 0.6);
+    const marcaRecomendada = marcasPotenciales[0];
+    const rubro = marcaRecomendada ? getRubroById(marcaRecomendada.rubroId) : null;
+    const vendedor = marcaRecomendada ? getVendedorByMarca(marcaRecomendada.id) : null;
+    const agencia = marcaRecomendada ? getAgenciaById(marcaRecomendada.agenciaId) : null;
+
+    insights.push({
+      id: `inv-${pantalla.id}`,
+      type: 'inventario',
+      priority: pantalla.location === 'Vitacura' || pantalla.location === 'Providencia' ? 'alta' : 'media',
+      title: `${pantalla.id} ${pantalla.location} - Oportunidad ${rubro?.nombre || 'Multirubro'}`,
+      description: `Pantalla con 78% de disponibilidad en Q2. Alto tráfico de vehículos segmento ${pantalla.segment} detectado. Ideal para marcas de ${rubro?.nombre.toLowerCase() || 'diversos rubros'}.`,
+      location: pantalla.location,
+      timeframe: 'Q2 2025',
+      estimatedValue: Math.floor(Math.random() * 4000000) + 2500000,
+      action: marcaRecomendada ? `Contactar ${marcaRecomendada.nombre} (${agencia?.nombre || 'Directo'})` : 'Contactar prospectos del rubro',
+      icon: Brain,
+      color: 'text-amber-400',
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      data: [
+        { label: 'Disponibilidad', value: '78%' },
+        { label: 'Tráfico Promedio', value: `${Math.floor(Math.random() * 10000) + 5000}/día` },
+        { label: 'Segmento', value: pantalla.segment }
+      ],
+      reasoning: `El perfil de audiencia de ${pantalla.location} coincide con el target de ${rubro?.nombre || 'múltiples rubros'}. Históricamente esta zona tiene alta conversión para campañas OOH.`,
+      targetIndustry: rubro?.nombre,
+      targetBrand: marcaRecomendada?.nombre,
+      vendedorId: vendedor?.id,
+      agenciaId: agencia?.id
+    });
+  });
+
+  // Alertas de tendencias
+  insights.push(
+    {
+      id: 'trend-ev',
+      type: 'tendencia',
+      priority: 'alta',
+      title: 'Aumento de Vehículos Eléctricos',
+      description: 'Nueva tendencia detectada: aumento del 34% de vehículos eléctricos e híbridos en pantallas de Vitacura y Las Condes durante el último mes.',
+      location: 'Vitacura / Las Condes',
+      timeframe: 'Últimos 30 días',
+      icon: Zap,
+      color: 'text-lime-400',
+      gradient: 'from-lime-500/20 to-green-500/20',
+      data: [
+        { label: 'Crecimiento', value: '+34%' },
+        { label: 'Vehículos Detectados', value: '890/mes' },
+        { label: 'Proyección Q2', value: '+45%' }
+      ],
+      reasoning: 'El crecimiento de vehículos eléctricos coincide con las nuevas políticas de movilidad sustentable. Oportunidad para marcas de tecnología verde y automóviles premium.',
+      targetIndustry: 'Automotriz / Tecnología',
+      targetBrand: 'Tesla / BYD / BMW / Volvo'
+    },
+    {
+      id: 'trend-suv',
+      type: 'tendencia',
+      priority: 'media',
+      title: 'Concentración SUV Premium',
+      description: 'Los SUV premium se concentran en pantallas de Las Condes y Lo Barnechea entre 17:00-20:00 hrs con un 58% del flujo total.',
+      location: 'Las Condes / Lo Barnechea',
+      timeframe: '17:00-20:00 hrs',
+      icon: TrendingUp,
+      color: 'text-cyan-400',
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      data: [
+        { label: 'SUVs Premium', value: '58%' },
+        { label: 'Vehículos/día', value: '3.200' }
+      ],
+      reasoning: 'El horario de retorno del trabajo concentra vehículos de alto poder adquisitivo. Ideal para marcas de lujo y servicios financieros premium.'
+    }
+  );
+
+  return insights.sort((a, b) => {
+    const priorityOrder = { alta: 0, media: 1, baja: 2 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+};
 
 const PRIORITY_FILTERS = ['todos', 'alta', 'media', 'baja'];
-const TYPE_FILTERS = ['todos', 'opportunity', 'alert', 'trend', 'inventory', 'competitor'];
+const TYPE_FILTERS = ['todos', 'oportunidad', 'alerta', 'tendencia', 'inventario', 'competencia'];
 
 const formatCLP = (amount: number) => {
   return new Intl.NumberFormat('es-CL', {
@@ -273,26 +234,34 @@ export function Insights() {
   const [expandedInsight, setExpandedInsight] = useState<string | null>(null);
   const [showProposal, setShowProposal] = useState(false);
   const [selectedInsightForProposal, setSelectedInsightForProposal] = useState<Insight | null>(null);
+  const [filterVendedor, setFilterVendedor] = useState<string>('todos');
+
+  // Generar insights desde data real
+  const INSIGHTS_DATA = useMemo(() => generateInsightsFromData(), []);
 
   // Filtrar insights
-  const filteredInsights = INSIGHTS_DATA.filter(insight => {
-    const priorityMatch = selectedPriority === 'todos' || insight.priority === selectedPriority;
-    const typeMatch = selectedType === 'todos' || insight.type === selectedType;
-    return priorityMatch && typeMatch;
-  });
+  const filteredInsights = useMemo(() => {
+    return INSIGHTS_DATA.filter(insight => {
+      const priorityMatch = selectedPriority === 'todos' || insight.priority === selectedPriority;
+      const typeMatch = selectedType === 'todos' || insight.type === selectedType;
+      const vendedorMatch = filterVendedor === 'todos' || insight.vendedorId === filterVendedor;
+      return priorityMatch && typeMatch && vendedorMatch;
+    });
+  }, [INSIGHTS_DATA, selectedPriority, selectedType, filterVendedor]);
 
   // Contadores
-  const counts = {
+  const counts = useMemo(() => ({
     total: INSIGHTS_DATA.length,
     alta: INSIGHTS_DATA.filter(i => i.priority === 'alta').length,
     media: INSIGHTS_DATA.filter(i => i.priority === 'media').length,
     baja: INSIGHTS_DATA.filter(i => i.priority === 'baja').length,
-    opportunity: INSIGHTS_DATA.filter(i => i.type === 'opportunity').length,
-    alert: INSIGHTS_DATA.filter(i => i.type === 'alert').length,
-    trend: INSIGHTS_DATA.filter(i => i.type === 'trend').length,
-    inventory: INSIGHTS_DATA.filter(i => i.type === 'inventory').length,
-    competitor: INSIGHTS_DATA.filter(i => i.type === 'competitor').length
-  };
+    oportunidad: INSIGHTS_DATA.filter(i => i.type === 'oportunidad').length,
+    alerta: INSIGHTS_DATA.filter(i => i.type === 'alerta').length,
+    tendencia: INSIGHTS_DATA.filter(i => i.type === 'tendencia').length,
+    inventario: INSIGHTS_DATA.filter(i => i.type === 'inventario').length,
+    competencia: INSIGHTS_DATA.filter(i => i.type === 'competencia').length,
+    valorTotal: INSIGHTS_DATA.reduce((acc, i) => acc + (i.estimatedValue || 0), 0)
+  }), [INSIGHTS_DATA]);
 
   const handleGenerateProposal = (insight: Insight) => {
     setSelectedInsightForProposal(insight);
@@ -301,22 +270,22 @@ export function Insights() {
 
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
-      opportunity: 'Oportunidad',
-      alert: 'Alerta',
-      trend: 'Tendencia',
-      inventory: 'Inventario',
-      competitor: 'Competencia'
+      oportunidad: 'Oportunidad',
+      alerta: 'Alerta',
+      tendencia: 'Tendencia',
+      inventario: 'Inventario',
+      competencia: 'Competencia'
     };
     return labels[type] || type;
   };
 
   const getTypeIcon = (type: string) => {
     const icons: Record<string, any> = {
-      opportunity: Lightbulb,
-      alert: Bell,
-      trend: TrendingUp,
-      inventory: Brain,
-      competitor: Target
+      oportunidad: Lightbulb,
+      alerta: Bell,
+      tendencia: TrendingUp,
+      inventario: Brain,
+      competencia: Target
     };
     return icons[type] || Lightbulb;
   };
@@ -329,7 +298,7 @@ export function Insights() {
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-magenta-400">
             Insights & Recomendaciones
           </h1>
-          <p className="text-gray-400 mt-1">Centro unificado de oportunidades y alertas inteligentes</p>
+          <p className="text-gray-400 mt-1">Centro unificado de oportunidades basado en datos reales de marcas y tráfico</p>
         </div>
         <div className="flex items-center gap-2">
           <Bell className="w-5 h-5 text-cyan-400" />
@@ -370,57 +339,74 @@ export function Insights() {
         <div className="bg-navy-900/50 backdrop-blur-md p-4 rounded-xl border border-emerald-500/20">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-gray-400">Valor Estimado</span>
+            <span className="text-xs text-gray-400">Valor Total</span>
           </div>
-          <p className="text-lg font-bold text-emerald-400">{formatCLP(INSIGHTS_DATA.reduce((acc, i) => acc + (i.estimatedValue || 0), 0))}</p>
+          <p className="text-lg font-bold text-emerald-400">{formatCLP(counts.valorTotal)}</p>
         </div>
       </div>
 
       {/* Filtros */}
       <div className="bg-navy-900/50 backdrop-blur-md p-4 rounded-xl border border-white/10">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
-            <label className="block text-xs text-gray-400 mb-2">Filtrar por Prioridad</label>
-            <div className="flex flex-wrap gap-2">
-              {PRIORITY_FILTERS.map(priority => (
-                <button
-                  key={priority}
-                  onClick={() => setSelectedPriority(priority)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize",
-                    selectedPriority === priority
-                      ? priority === 'alta'
-                        ? 'bg-rose-500 text-white'
-                        : priority === 'media'
-                        ? 'bg-amber-500 text-white'
-                        : priority === 'baja'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-cyan-500 text-white'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  )}
-                >
-                  {priority}
-                </button>
-              ))}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <label className="block text-xs text-gray-400 mb-2">Filtrar por Prioridad</label>
+              <div className="flex flex-wrap gap-2">
+                {PRIORITY_FILTERS.map(priority => (
+                  <button
+                    key={priority}
+                    onClick={() => setSelectedPriority(priority)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize",
+                      selectedPriority === priority
+                        ? priority === 'alta'
+                          ? 'bg-rose-500 text-white'
+                          : priority === 'media'
+                          ? 'bg-amber-500 text-white'
+                          : priority === 'baja'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-cyan-500 text-white'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    )}
+                  >
+                    {priority}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs text-gray-400 mb-2">Filtrar por Tipo</label>
+              <div className="flex flex-wrap gap-2">
+                {TYPE_FILTERS.map(type => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedType(type)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize",
+                      selectedType === type
+                        ? 'bg-magenta-500 text-white'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                    )}
+                  >
+                    {getTypeLabel(type)}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="flex-1">
-            <label className="block text-xs text-gray-400 mb-2">Filtrar por Tipo</label>
-            <div className="flex flex-wrap gap-2">
-              {TYPE_FILTERS.map(type => (
-                <button
-                  key={type}
-                  onClick={() => setSelectedType(type)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all capitalize",
-                    selectedType === type
-                      ? 'bg-magenta-500 text-white'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  )}
-                >
-                  {getTypeLabel(type)}
-                </button>
-              ))}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <label className="block text-xs text-gray-400 mb-2">Filtrar por Vendedor</label>
+              <select
+                value={filterVendedor}
+                onChange={(e) => setFilterVendedor(e.target.value)}
+                className="w-full bg-navy-950 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500"
+              >
+                <option value="todos">Todos los vendedores</option>
+                {VENDEDORES.filter(v => v.activo).map(vendedor => (
+                  <option key={vendedor.id} value={vendedor.id}>{vendedor.nombre}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -436,6 +422,11 @@ export function Insights() {
             media: 'border-amber-500/30',
             baja: 'border-blue-500/30'
           };
+
+          const marca = insight.targetBrand ? MARCAS.find(m => m.nombre === insight.targetBrand) : null;
+          const rubro = marca ? getRubroById(marca.rubroId) : null;
+          const agencia = marca ? getAgenciaById(marca.agenciaId) : null;
+          const vendedor = marca ? getVendedorByMarca(marca.id) : null;
 
           return (
             <motion.div
@@ -473,6 +464,43 @@ export function Insights() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-300 leading-relaxed">{insight.description}</p>
+                      
+                      {/* Tags de marca, rubro y agencia */}
+                      <div className="flex flex-wrap items-center gap-2 mt-3">
+                        {marca && (
+                          <span
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                            style={{ backgroundColor: `${marca.color}20`, color: marca.color }}
+                          >
+                            <Building2 className="w-3 h-3" />
+                            {marca.nombre}
+                          </span>
+                        )}
+                        {rubro && (
+                          <span
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                            style={{ backgroundColor: `${rubro.color}20`, color: rubro.color }}
+                          >
+                            <Tag className="w-3 h-3" />
+                            {rubro.nombre}
+                          </span>
+                        )}
+                        {agencia && (
+                          <span
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                            style={{ backgroundColor: `${agencia.color}20`, color: agencia.color }}
+                          >
+                            <Briefcase className="w-3 h-3" />
+                            {isDirecto(agencia.id) ? 'Directo' : agencia.nombre.split(' ')[0]}
+                          </span>
+                        )}
+                        {vendedor && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-cyan-500/20 text-cyan-400">
+                            <Users className="w-3 h-3" />
+                            {vendedor.nombre}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <button
@@ -535,8 +563,8 @@ export function Insights() {
                         </div>
                       )}
 
-                      {/* Target */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                      {/* Target y Vendedor */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
                         {insight.targetIndustry && (
                           <div className="bg-navy-950/50 border border-white/10 rounded-lg p-3">
                             <p className="text-xs text-gray-400 mb-1">Industria Sugerida</p>
@@ -547,6 +575,12 @@ export function Insights() {
                           <div className="bg-navy-950/50 border border-white/10 rounded-lg p-3">
                             <p className="text-xs text-gray-400 mb-1">Marca Objetivo</p>
                             <p className="text-sm font-medium text-magenta-400">{insight.targetBrand}</p>
+                          </div>
+                        )}
+                        {vendedor && (
+                          <div className="bg-navy-950/50 border border-white/10 rounded-lg p-3">
+                            <p className="text-xs text-gray-400 mb-1">Vendedor Asignado</p>
+                            <p className="text-sm font-medium text-emerald-400">{vendedor.nombre}</p>
                           </div>
                         )}
                       </div>
@@ -660,6 +694,52 @@ export function Insights() {
                   </div>
                 )}
               </div>
+
+              {/* Información de Marca y Vendedor */}
+              {selectedInsightForProposal.targetBrand && (
+                <div className="bg-gradient-to-br from-magenta-500/10 to-purple-500/10 border border-magenta-500/20 rounded-xl p-5">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 rounded-lg bg-magenta-500/20 border border-magenta-500/30">
+                      <Building2 className="w-5 h-5 text-magenta-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Información de Marca</h3>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-xs text-gray-400">Marca</p>
+                      <p className="text-white font-medium">{selectedInsightForProposal.targetBrand}</p>
+                    </div>
+                    {selectedInsightForProposal.targetIndustry && (
+                      <div>
+                        <p className="text-xs text-gray-400">Industria</p>
+                        <p className="text-white font-medium">{selectedInsightForProposal.targetIndustry}</p>
+                      </div>
+                    )}
+                    {(() => {
+                      const marca = MARCAS.find(m => m.nombre === selectedInsightForProposal.targetBrand);
+                      if (!marca) return null;
+                      const agencia = getAgenciaById(marca.agenciaId);
+                      const vendedor = getVendedorByMarca(marca.id);
+                      return (
+                        <>
+                          {agencia && (
+                            <div>
+                              <p className="text-xs text-gray-400">Agencia</p>
+                              <p className="text-white font-medium">{isDirecto(agencia.id) ? 'Directo' : agencia.nombre}</p>
+                            </div>
+                          )}
+                          {vendedor && (
+                            <div>
+                              <p className="text-xs text-gray-400">Vendedor</p>
+                              <p className="text-white font-medium">{vendedor.nombre}</p>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+              )}
 
               {/* Recomendación Estratégica */}
               {selectedInsightForProposal.reasoning && (

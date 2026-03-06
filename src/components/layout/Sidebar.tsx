@@ -27,7 +27,8 @@ import {
   Users,
   Briefcase,
   Search,
-  Lightbulb
+  Lightbulb,
+  Building2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
@@ -41,6 +42,11 @@ const NAV_ITEMS = [
   { path: '/time', icon: History, label: 'Time Machine' },
   { path: '/insights', icon: Lightbulb, label: 'Insights' },
   { path: '/team', icon: Users, label: 'Equipo' },
+];
+
+const ADMIN_ITEMS = [
+  { path: '/admin/marcas', icon: Building2, label: 'Marcas' },
+  { path: '/admin/vendedores', icon: Users, label: 'Vendedores' },
 ];
 
 interface SidebarProps {
@@ -82,32 +88,67 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
           )}
         </div>
 
-        <nav className="p-4 space-y-2">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                to={item.path}
-                key={item.path}
-                onClick={isMobileOpen ? onCloseMobile : undefined}
-                className={({ isActive }) =>
-                  `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-gradient-to-r from-[rgba(var(--accent-cyan),0.15)] to-transparent border-l-2 border-[rgb(var(--accent-cyan))] text-white'
-                      : 'text-gray-400 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <Icon size={20} className={isActive ? 'text-[rgb(var(--accent-cyan))]' : ''} />
-                    <span className="font-medium text-sm">{item.label}</span>
-                  </>
-                )}
-              </NavLink>
-            );
-          })}
-        </nav>
+        <div>
+          <nav className="p-4 space-y-2">
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <NavLink
+                  to={item.path}
+                  key={item.path}
+                  onClick={isMobileOpen ? onCloseMobile : undefined}
+                  className={({ isActive }) =>
+                    `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[rgba(var(--accent-cyan),0.15)] to-transparent border-l-2 border-[rgb(var(--accent-cyan))] text-white'
+                        : 'text-gray-400 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
+                    }`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon size={20} className={isActive ? 'text-[rgb(var(--accent-cyan))]' : ''} />
+                      <span className="font-medium text-sm">{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              );
+            })}
+          </nav>
+
+          {/* Sección de Administración */}
+          <div className="px-4 pb-2">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-4">
+              Administración
+            </div>
+            <nav className="space-y-2">
+              {ADMIN_ITEMS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    to={item.path}
+                    key={item.path}
+                    onClick={isMobileOpen ? onCloseMobile : undefined}
+                    className={({ isActive }) =>
+                      `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-gradient-to-r from-[rgba(var(--accent-cyan),0.15)] to-transparent border-l-2 border-[rgb(var(--accent-cyan))] text-white'
+                          : 'text-gray-400 hover:bg-[rgba(255,255,255,0.02)] hover:text-white'
+                      }`
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <Icon size={20} className={isActive ? 'text-[rgb(var(--accent-cyan))]' : ''} />
+                        <span className="font-medium text-sm">{item.label}</span>
+                      </>
+                    )}
+                  </NavLink>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
       </div>
 
       <div className="p-4 border-t border-[rgba(255,255,255,0.05)] space-y-2">
