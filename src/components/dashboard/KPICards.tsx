@@ -15,7 +15,7 @@ export function KPICards({ data }: KPICardsProps) {
   const cards = [
     {
       title: 'Total Capturas Hoy',
-      value: data.totalToday.toLocaleString(),
+      value: data.totalToday.toLocaleString('es-CL').replace(/,/g, '.'),
       icon: Activity,
       color: 'text-blue-400',
       bg: 'bg-blue-400/10',
@@ -24,7 +24,7 @@ export function KPICards({ data }: KPICardsProps) {
     },
     {
       title: 'Vehículos Únicos',
-      value: data.uniqueVehicles.toLocaleString(),
+      value: data.uniqueVehicles.toLocaleString('es-CL').replace(/,/g, '.'),
       icon: Car,
       color: 'text-[rgb(var(--accent-lime))]',
       bg: 'bg-[rgb(var(--accent-lime))]/10',

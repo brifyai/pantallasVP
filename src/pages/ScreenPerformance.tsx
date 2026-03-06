@@ -189,7 +189,7 @@ export function ScreenPerformance() {
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Volumen/Día</p>
-                    <p className="text-lg font-semibold text-white">{screen.totalVolume.toLocaleString()}</p>
+                    <p className="text-lg font-semibold text-white">{screen.totalVolume.toLocaleString('es-CL').replace(/,/g, '.')}</p>
                   </div>
                 </div>
 
@@ -260,7 +260,7 @@ export function ScreenPerformance() {
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Tráfico Diario</p>
-                      <p className="text-2xl font-bold text-white">{selectedScreen.totalVolume.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-white">{selectedScreen.totalVolume.toLocaleString('es-CL').replace(/,/g, '.')}</p>
                     </div>
                   </div>
 
@@ -270,7 +270,7 @@ export function ScreenPerformance() {
                     </div>
                     <div>
                       <p className="text-sm text-slate-400">Precio Sugerido / Día</p>
-                      <p className="text-2xl font-bold text-white">${selectedScreen.suggestedPrice.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-white">${selectedScreen.suggestedPrice.toLocaleString('es-CL').replace(/,/g, '.')}</p>
                     </div>
                   </div>
                 </div>

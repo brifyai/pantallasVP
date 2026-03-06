@@ -61,7 +61,7 @@ export function VehicleTypesChart({ data }: VehicleTypesChartProps) {
         </ResponsiveContainer>
         {/* Center Text */}
         <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none" style={{ top: '5%', transform: 'translateY(-25px)' }}>
-          <span className="text-base md:text-lg font-bold text-white">{data.reduce((acc, curr) => acc + curr.value, 0).toLocaleString()}</span>
+          <span className="text-base md:text-lg font-bold text-white">{data.reduce((acc, curr) => acc + curr.value, 0).toLocaleString('es-CL').replace(/,/g, '.')}</span>
           <span className="text-[10px] md:text-xs text-gray-400">Total</span>
         </div>
       </div>

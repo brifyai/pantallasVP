@@ -34,6 +34,26 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: var(--font-sans);
+  cursor: default;
+}
+
+/* Cursor pointer para elementos interactivos */
+button, a, [role="button"], 
+input[type="button"], input[type="submit"], input[type="reset"],
+input[type="checkbox"], input[type="radio"],
+select, summary,
+[onclick], [tabindex],
+[class*="cursor-pointer"],
+nav a, nav button,
+header button, header a,
+aside button, aside a,
+footer button, footer a,
+article button, article a,
+section button, section a,
+div[onclick], div[role="button"],
+span[onclick], span[role="button"],
+label, .clickable, .interactive {
+  cursor: pointer !important;
 }
 
 .glass-panel {

@@ -37,7 +37,7 @@ export function OpportunityWidget() {
       `Segmento Objetivo: Propietarios de vehículos premium (BMW, Audi, Mercedes)\n` +
       `Ubicación: Vitacura - Av. Kennedy\n` +
       `Horario Óptimo: Martes y Jueves 07:00-09:00 hrs\n` +
-      `Audiencia Alcanzada: ~2,500 vehículos premium/semana\n` +
+      `Audiencia Alcanzada: ~2.500 vehículos premium/semana\n` +
       `Recomendación: Campaña de seguros de cobertura completa con descuento por uso de tracker GPS`
     );
     setCopied(true);
@@ -163,7 +163,7 @@ export function OpportunityWidget() {
                     <Users className="w-4 h-4 text-emerald-400" />
                     <span className="text-xs font-medium text-gray-400">AUDIENCIA ALCANZADA</span>
                   </div>
-                  <p className="text-white font-medium">~2,500 vehículos premium/semana</p>
+                  <p className="text-white font-medium">~2.500 vehículos premium/semana</p>
                 </div>
 
                 <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
@@ -301,7 +301,7 @@ export function OpportunityWidget() {
                     </div>
                     <div>
                       <p className="text-xs text-gray-400">Tráfico Promedio</p>
-                      <p className="text-lg font-bold text-white">15,000 <span className="text-xs font-normal text-gray-400">vehículos/día</span></p>
+                      <p className="text-lg font-bold text-white">15.000 <span className="text-xs font-normal text-gray-400">vehículos/día</span></p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-navy-950/50 rounded-lg">

@@ -60,17 +60,17 @@ const INSIGHTS_DATA: Insight[] = [
     description: 'Los días Martes y Jueves entre las 07:00 y 09:00 hrs, el 42% de los vehículos detectados en Vitacura pertenecen a marcas premium. Existe un segmento no explotado para aseguradoras de alta gama.',
     location: 'Vitacura - Av. Kennedy',
     timeframe: 'Martes y Jueves 07:00-09:00 hrs',
-    audience: '~2,500 vehículos premium/semana',
+    audience: '~2.500 vehículos premium/semana',
     estimatedValue: 2100000,
     action: 'Generar propuesta para aseguradoras premium',
     icon: Lightbulb,
     color: 'text-magenta-400',
     gradient: 'from-magenta-500/20 to-purple-500/20',
     data: [
-      { label: 'Tráfico Promedio', value: '15,000 vehículos/día' },
+      { label: 'Tráfico Promedio', value: '15.000 vehículos/día' },
       { label: 'Segmento Premium', value: '42%' },
       { label: 'Retención Visual', value: '78%' },
-      { label: 'CPM Estimado', value: '$3,200' }
+      { label: 'CPM Estimado', value: '$3.200' }
     ],
     reasoning: 'El análisis de patrones revela que el 68% de los vehículos premium residen en Vitacura, Lo Barnechea o Las Condes. Este segmento presenta una tasa de conversión 2.3x superior al promedio.',
     targetIndustry: 'Seguros de Alta Gama'
@@ -106,7 +106,7 @@ const INSIGHTS_DATA: Insight[] = [
     gradient: 'from-cyan-500/20 to-blue-500/20',
     data: [
       { label: 'SUVs Premium', value: '58%' },
-      { label: 'Vehículos/día', value: '3,200' }
+      { label: 'Vehículos/día', value: '3.200' }
     ]
   },
   {
@@ -122,7 +122,7 @@ const INSIGHTS_DATA: Insight[] = [
     gradient: 'from-rose-500/20 to-red-500/20',
     data: [
       { label: 'Share Toyota', value: '22%' },
-      { label: 'Vehículos/día', value: '4,500' }
+      { label: 'Vehículos/día', value: '4.500' }
     ],
     targetBrand: 'Toyota',
     reasoning: 'Oportunidad para marcas competidoras (Nissan, Mazda, Hyundai) de interceptar audiencia en esta ruta.'
@@ -432,9 +432,9 @@ export function Insights() {
           const Icon = insight.icon;
           const isExpanded = expandedInsight === insight.id;
           const priorityColors = {
-            alta: 'border-rose-500/30 bg-gradient-to-r from-rose-500/5 to-transparent',
-            media: 'border-amber-500/30 bg-gradient-to-r from-amber-500/5 to-transparent',
-            baja: 'border-blue-500/30 bg-gradient-to-r from-blue-500/5 to-transparent'
+            alta: 'border-rose-500/30',
+            media: 'border-amber-500/30',
+            baja: 'border-blue-500/30'
           };
 
           return (
@@ -444,7 +444,7 @@ export function Insights() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               className={cn(
-                "bg-navy-900/50 backdrop-blur-md rounded-xl border p-5 transition-all hover:border-opacity-60",
+                "bg-[rgba(26,26,46,0.6)] backdrop-blur-md rounded-xl border p-5 transition-all hover:border-opacity-60",
                 priorityColors[insight.priority]
               )}
             >

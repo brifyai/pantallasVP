@@ -235,15 +235,15 @@ const PredictionTooltip = ({ active, payload, label }: any) => {
         <div className="space-y-1 text-xs">
           <div className="flex justify-between gap-4">
             <span className="text-gray-400">Predicción:</span>
-            <span className="text-cyan-400 font-bold">{data.predict?.toLocaleString()}</span>
+            <span className="text-cyan-400 font-bold">{data.predict?.toLocaleString('es-CL').replace(/,/g, '.')}</span>
           </div>
           <div className="flex justify-between gap-4">
             <span className="text-gray-400">Mínimo (95%):</span>
-            <span className="text-emerald-400">{data.lower?.toLocaleString()}</span>
+            <span className="text-emerald-400">{data.lower?.toLocaleString('es-CL').replace(/,/g, '.')}</span>
           </div>
           <div className="flex justify-between gap-4">
             <span className="text-gray-400">Máximo (95%):</span>
-            <span className="text-rose-400">{data.upper?.toLocaleString()}</span>
+            <span className="text-rose-400">{data.upper?.toLocaleString('es-CL').replace(/,/g, '.')}</span>
           </div>
           {data.isHoliday && (
             <div className="mt-2 pt-2 border-t border-white/10 text-fuchsia-400">
@@ -469,8 +469,8 @@ export function TimeMachine() {
         <MetricCard 
           title={`Flujo ${timeCapsuleMode ? 'Histórico' : comparisonMode === 'day' ? 'Hoy' : comparisonMode === 'week' ? 'Esta Semana' : 'Este Mes'}`}
           value={timeCapsuleMode 
-            ? (timeCapsuleData.reduce((a, b) => a + b.flow, 0) / 7).toFixed(0) + '/día'
-            : (comparisonMetrics.current / (comparisonMode === 'day' ? 1 : comparisonMode === 'week' ? 7 : 30)).toFixed(0) + '/día'
+            ? Math.round(timeCapsuleData.reduce((a, b) => a + b.flow, 0) / 7).toLocaleString('es-CL').replace(/,/g, '.') + '/día'
+            : Math.round(comparisonMetrics.current / (comparisonMode === 'day' ? 1 : comparisonMode === 'week' ? 7 : 30)).toLocaleString('es-CL').replace(/,/g, '.') + '/día'
           }
           previous={comparisonMetrics.previous}
           change={comparisonMetrics.change}
@@ -479,7 +479,7 @@ export function TimeMachine() {
         />
         <MetricCard 
           title="Predicción 7 días" 
-          value={predictions.reduce((a, b) => a + b.predict, 0).toLocaleString()}
+          value={predictions.reduce((a, b) => a + b.predict, 0).toLocaleString('es-CL').replace(/,/g, '.')}
           previous="-"
           change="IA Active"
           isPositive={true}

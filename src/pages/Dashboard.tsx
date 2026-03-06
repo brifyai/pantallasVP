@@ -52,7 +52,7 @@ const INSIGHTS_RESUMEN = [
     color: 'text-rose-400',
     bg: 'from-rose-500/20 to-red-500/20',
     description: 'Toyota domina 22% en Providencia AM',
-    value: '4,500/día',
+    value: '4.500/día',
     priority: 'alta'
   }
 ];

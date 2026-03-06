@@ -232,7 +232,7 @@ export function BrandIntelligence() {
 
       {/* KPI Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPIBox title="Detecciones (24h)" value={kpis.total.toLocaleString()} icon={Car} color="text-cyan-400" />
+        <KPIBox title="Detecciones (24h)" value={kpis.total.toLocaleString('es-CL').replace(/,/g, '.')} icon={Car} color="text-cyan-400" />
         <KPIBox title="Pantalla Principal" value={kpis.topScreen} icon={MapPin} color="text-magenta-400" />
         <KPIBox title="Hora Peak" value={kpis.peakHour} icon={Clock} color="text-lime-400" />
         <KPIBox title="Alta Afinidad" value={kpis.affinity} icon={Crosshair} color="text-yellow-400" />
