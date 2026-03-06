@@ -26,7 +26,8 @@ import {
   Layers,
   Users,
   Briefcase,
-  Search
+  Search,
+  Lightbulb
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
@@ -38,6 +39,7 @@ const NAV_ITEMS = [
   { path: '/geo', icon: Map, label: 'Geo Intelligence' },
   { path: '/sales', icon: TrendingUp, label: 'Sales Intelligence' },
   { path: '/time', icon: History, label: 'Time Machine' },
+  { path: '/insights', icon: Lightbulb, label: 'Insights' },
   { path: '/team', icon: Users, label: 'Equipo' },
 ];
 

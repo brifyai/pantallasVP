@@ -1370,36 +1370,31 @@ export function SalesIntelligence() {
         </button>
       </div>
 
-      {/* Smart Alerts */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {alerts.map((alert, i) => (
-          <motion.div
-            key={alert.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-navy-900/50 backdrop-blur-md p-4 rounded-xl border border-white/5 relative overflow-hidden group"
-          >
-            <div className={cn("absolute top-0 left-0 w-1 h-full", 
-              alert.type === 'opportunity' ? 'bg-lime-500' : 
-              alert.type === 'trend' ? 'bg-cyan-500' : 'bg-magenta-500'
-            )} />
-            <div className="flex items-start gap-3">
-              <div className={cn("p-2 rounded-lg bg-white/5", alert.color)}>
-                <alert.icon className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-white capitalize mb-1">
-                  {alert.type === 'opportunity' ? 'Oportunidad' : alert.type === 'trend' ? 'Tendencia' : 'Alerta Competencia'}
-                </h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{alert.text}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {/* Banner hacia Insights */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-cyan-500/10 to-magenta-500/10 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between"
+      >
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-cyan-500/20 rounded-lg">
+            <Lightbulb className="w-5 h-5 text-cyan-400" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-white">¿Buscas insights y alertas?</h3>
+            <p className="text-xs text-gray-400">Visita nuestro nuevo centro unificado de insights</p>
+          </div>
+        </div>
+        <button
+          onClick={() => window.location.href = '/insights'}
+          className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+        >
+          Ir a Insights
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </motion.div>
 
-      {/* Prospectos por Rubro - Nueva Sección */}
+      {/* Prospectos por Rubro */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-4">
           <div>

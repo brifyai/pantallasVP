@@ -8,6 +8,7 @@ import { SalesIntelligence } from './pages/SalesIntelligence';
 import { TimeMachine } from './pages/TimeMachine';
 import { Settings } from './pages/Settings';
 import { Team } from './pages/Team';
+import { Insights } from './pages/Insights';
 
 export function App() {
   return (
@@ -22,6 +23,7 @@ export function App() {
           <Route path="sales" element={<SalesIntelligence />} />
           <Route path="time" element={<TimeMachine />} />
           <Route path="team" element={<Team />} />
+          <Route path="insights" element={<Insights />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
