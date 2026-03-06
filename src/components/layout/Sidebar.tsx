@@ -1,5 +1,5 @@
 // src/components/layout/Sidebar.tsx
-import { useState, createElement } from 'react';
+import { useState, createElement, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import {
@@ -25,7 +25,8 @@ import {
   Filter,
   Layers,
   Users,
-  Briefcase
+  Briefcase,
+  Search
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
@@ -48,6 +49,7 @@ interface SidebarProps {
 
 export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: SidebarProps) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const sidebarClasses = isMobileOpen
     ? 'mobile-sidebar active'
@@ -173,9 +175,31 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
               </button>
             </div>
 
+            {/* Search Bar */}
+            <div className="sticky top-[73px] bg-[#0a0a1a] z-10 py-4">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar en el centro de ayuda..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-navy-950/50 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors"
+                  >
+                    <X className="w-4 h-4 text-gray-400" />
+                  </button>
+                )}
+              </div>
+            </div>
+
             {/* Content */}
             <div className="p-6 space-y-8">
-              {/* Quick Links */}
+              {/* Quick Links - Always visible */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a href="mailto:soporte@flesad.com" className="group p-4 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl hover:border-cyan-500/40 transition-all">
                   <div className="flex items-center gap-3 mb-2">
@@ -193,216 +217,101 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
                 </a>
               </div>
 
-              {/* Guía de Inicio Rápido */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-amber-400" />
-                  Guía de Inicio Rápido
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-                    <h4 className="font-medium text-white mb-2">1. Explora el Command Center</h4>
-                    <p className="text-sm text-gray-400">Comienza por el panel principal para ver los KPIs en tiempo real y tener una visión general del tráfico y rendimiento de tu negocio.</p>
-                  </div>
-                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-                    <h4 className="font-medium text-white mb-2">2. Analiza tu Competencia</h4>
-                    <p className="text-sm text-gray-400">Usa Brand Intelligence para comparar el share de tráfico de diferentes marcas y entender tu posición en el mercado.</p>
-                  </div>
-                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-                    <h4 className="font-medium text-white mb-2">3. Encuentra la Ubicación Perfecta</h4>
-                    <p className="text-sm text-gray-400">Geo Intelligence te muestra el mapa de calor de Santiago para identificar las zonas de mayor tráfico según tu target.</p>
-                  </div>
-                  <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4">
-                    <h4 className="font-medium text-white mb-2">4. Genera Propuestas con IA</h4>
-                    <p className="text-sm text-gray-400">Sales Intelligence crea propuestas de valor automáticas basadas en datos reales de audiencia para tus clientes.</p>
-                  </div>
+              {/* Search Results Info */}
+              {searchTerm && (
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-400">
+                    Resultados para "<span className="text-cyan-400 font-medium">{searchTerm}</span>"
+                  </p>
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    Limpiar búsqueda
+                  </button>
                 </div>
-              </div>
+              )}
+
+              {/* Guía de Inicio Rápido */}
+              <HelpSection
+                searchTerm={searchTerm}
+                icon={Zap}
+                iconColor="text-amber-400"
+                title="Guía de Inicio Rápido"
+                items={[
+                  { title: '1. Explora el Command Center', content: 'Comienza por el panel principal para ver los KPIs en tiempo real y tener una visión general del tráfico y rendimiento de tu negocio.' },
+                  { title: '2. Analiza tu Competencia', content: 'Usa Brand Intelligence para comparar el share de tráfico de diferentes marcas y entender tu posición en el mercado.' },
+                  { title: '3. Encuentra la Ubicación Perfecta', content: 'Geo Intelligence te muestra el mapa de calor de Santiago para identificar las zonas de mayor tráfico según tu target.' },
+                  { title: '4. Genera Propuestas con IA', content: 'Sales Intelligence crea propuestas de valor automáticas basadas en datos reales de audiencia para tus clientes.' }
+                ]}
+              />
 
               {/* Módulos de la App */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <LayoutDashboard className="w-5 h-5 text-cyan-400" />
-                  Módulos de la Aplicación
-                </h3>
-                <div className="space-y-3">
-                  <HelpModuleCard
-                    icon={LayoutDashboard}
-                    title="Command Center"
-                    description="Panel principal con KPIs en tiempo real, flujo de vehículos, y métricas clave del negocio."
-                    features={[
-                      'KPIs principales: Ingresos, Utilidad, ROI, Ticket Promedio',
-                      'Gráfico de flujo de vehículos en tiempo real',
-                      'Top 5 marcas con mayor tráfico',
-                      'Distribución por tipo de vehículo',
-                      'Mapa de calor semanal por hora'
-                    ]}
-                  />
-                  <HelpModuleCard
-                    icon={BarChart2}
-                    title="Brand Intelligence"
-                    description="Análisis competitivo de marcas. Compara share, crecimiento y dominancia por zona."
-                    features={[
-                      'Share de tráfico por marca',
-                      'Crecimiento interanual (YoY)',
-                      'Dominancia por comuna',
-                      'Top 10 marcas por volumen',
-                      'Filtros por segmento (Premium, Mass, etc.)'
-                    ]}
-                  />
-                  <HelpModuleCard
-                    icon={MonitorPlay}
-                    title="Screen Performance"
-                    description="Mide el rendimiento de cada pantalla individualmente."
-                    features={[
-                      'Vehículos únicos por pantalla',
-                      'Horarios peak de cada ubicación',
-                      'Composición de marcas por pantalla',
-                      'Comparativa entre pantallas',
-                      'Métricas de retención visual'
-                    ]}
-                  />
-                  <HelpModuleCard
-                    icon={Map}
-                    title="Geo Intelligence"
-                    description="Análisis geográfico avanzado con mapas de calor y distribución territorial."
-                    features={[
-                      'Mapa interactivo de Santiago',
-                      'Heatmap por densidad de tráfico',
-                      'Filtros por tipo de vehículo y marca',
-                      'Información detallada por comuna',
-                      'Capas de transporte público'
-                    ]}
-                  />
-                  <HelpModuleCard
-                    icon={TrendingUp}
-                    title="Sales Intelligence"
-                    description="Generación de insights comerciales y match de audiencias para ventas."
-                    features={[
-                      'Alertas inteligentes de oportunidades',
-                      'Audience Match: encuentra pantallas por target',
-                      'Competitor Tracker: analiza competencia',
-                      'Prospectos por Rubro con perfiles detallados',
-                      'Generador de propuestas de valor con IA'
-                    ]}
-                  />
-                  <HelpModuleCard
-                    icon={History}
-                    title="Time Machine"
-                    description="Análisis histórico y predictivo del tráfico."
-                    features={[
-                      'Comparación de períodos temporales',
-                      'Predicción de tráfico con IA',
-                      'Cápsula del tiempo: revive fechas específicas',
-                      'Exportación de datos históricos',
-                      'Detección de tendencias estacionales'
-                    ]}
-                  />
-                </div>
-              </div>
+              <HelpSection
+                searchTerm={searchTerm}
+                icon={LayoutDashboard}
+                iconColor="text-cyan-400"
+                title="Módulos de la Aplicación"
+                items={[
+                  { title: 'Command Center', content: 'Panel principal con KPIs en tiempo real, flujo de vehículos, y métricas clave del negocio. Incluye: KPIs principales (Ingresos, Utilidad, ROI, Ticket Promedio), Gráfico de flujo de vehículos en tiempo real, Top 5 marcas con mayor tráfico, Distribución por tipo de vehículo, Mapa de calor semanal por hora.' },
+                  { title: 'Brand Intelligence', content: 'Análisis competitivo de marcas. Compara share, crecimiento y dominancia por zona. Incluye: Share de tráfico por marca, Crecimiento interanual (YoY), Dominancia por comuna, Top 10 marcas por volumen, Filtros por segmento (Premium, Mass, etc.).' },
+                  { title: 'Screen Performance', content: 'Mide el rendimiento de cada pantalla individualmente. Incluye: Vehículos únicos por pantalla, Horarios peak de cada ubicación, Composición de marcas por pantalla, Comparativa entre pantallas, Métricas de retención visual.' },
+                  { title: 'Geo Intelligence', content: 'Análisis geográfico avanzado con mapas de calor y distribución territorial. Incluye: Mapa interactivo de Santiago, Heatmap por densidad de tráfico, Filtros por tipo de vehículo y marca, Información detallada por comuna, Capas de transporte público.' },
+                  { title: 'Sales Intelligence', content: 'Generación de insights comerciales y match de audiencias para ventas. Incluye: Alertas inteligentes de oportunidades, Audience Match (encuentra pantallas por target), Competitor Tracker (analiza competencia), Prospectos por Rubro con perfiles detallados, Generador de propuestas de valor con IA.' },
+                  { title: 'Time Machine', content: 'Análisis histórico y predictivo del tráfico. Incluye: Comparación de períodos temporales, Predicción de tráfico con IA, Cápsula del tiempo (revive fechas específicas), Exportación de datos históricos, Detección de tendencias estacionales.' }
+                ]}
+              />
 
               {/* FAQ Completa */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Preguntas Frecuentes</h3>
-                <div className="space-y-3">
-                  <FAQItem
-                    question="¿Cómo se calcula el Share de Tráfico?"
-                    answer="El Share se calcula dividiendo el número de vehículos detectados de una marca entre el total de vehículos del segmento seleccionado, multiplicado por 100. Los datos provienen de nuestros sensores en tiempo real instalados en cada pantalla."
-                  />
-                  <FAQItem
-                    question="¿Qué significa el CPM estimado?"
-                    answer="El CPM (Costo Por Mil impresiones) estimado se calcula basándose en el volumen de tráfico detectado, la ubicación de la pantalla, el perfil socioeconómico de la zona y el tipo de vehículos que transitan por el sector."
-                  />
-                  <FAQItem
-                    question="¿Cómo usar el Audience Match?"
-                    answer="En Sales Intelligence, selecciona el perfil de audiencia objetivo (Premium, Familiar, Joven, Masivo) y el sistema analizará los patrones de tráfico para recomendarte las 3 mejores pantallas. Cada recomendación incluye un score de match y la razón específica."
-                  />
-                  <FAQItem
-                    question="¿Los datos son en tiempo real?"
-                    answer="Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Los KPIs del Command Center y las alertas se actualizan automáticamente. Algunos análisis históricos y comparativos pueden tener un delay de 24 horas para procesamiento de datos."
-                  />
-                  <FAQItem
-                    question="¿Puedo exportar los reportes?"
-                    answer="Sí, todos los módulos permiten exportar datos en formato CSV. También puedes generar reportes PDF personalizados con tu branding desde el botón superior de cada página."
-                  />
-                  <FAQItem
-                    question="¿Qué es la Time Machine?"
-                    answer="Time Machine es una herramienta que te permite comparar períodos temporales diferentes y predecir tráfico futuro usando IA. Incluye la 'Cápsula del Tiempo' para revivir fechas específicas y analizar tendencias estacionales."
-                  />
-                  <FAQItem
-                    question="¿Cómo funciona el Competitor Tracker?"
-                    answer="En Sales Intelligence, selecciona una marca y el sistema mostrará un gráfico comparativo del tráfico de esa marca vs sus competidores directos en diferentes pantallas. Incluye insights estratégicos para identificar oportunidades de ataque."
-                  />
-                  <FAQItem
-                    question="¿Qué son los Prospectos por Rubro?"
-                    answer="Es una sección de Sales Intelligence que muestra 10 industrias potenciales para ofrecer publicidad OOH. Cada rubro incluye perfil cuantitativo, cualitativo, comportamiento por comuna y recomendaciones de campaña con inversión estimada."
-                  />
-                </div>
-              </div>
+              <HelpSection
+                searchTerm={searchTerm}
+                icon={HelpCircle}
+                iconColor="text-purple-400"
+                title="Preguntas Frecuentes"
+                items={[
+                  { title: '¿Cómo se calcula el Share de Tráfico?', content: 'El Share se calcula dividiendo el número de vehículos detectados de una marca entre el total de vehículos del segmento seleccionado, multiplicado por 100. Los datos provienen de nuestros sensores en tiempo real instalados en cada pantalla.' },
+                  { title: '¿Qué significa el CPM estimado?', content: 'El CPM (Costo Por Mil impresiones) estimado se calcula basándose en el volumen de tráfico detectado, la ubicación de la pantalla, el perfil socioeconómico de la zona y el tipo de vehículos que transitan por el sector.' },
+                  { title: '¿Cómo usar el Audience Match?', content: 'En Sales Intelligence, selecciona el perfil de audiencia objetivo (Premium, Familiar, Joven, Masivo) y el sistema analizará los patrones de tráfico para recomendarte las 3 mejores pantallas. Cada recomendación incluye un score de match y la razón específica.' },
+                  { title: '¿Los datos son en tiempo real?', content: 'Sí, nuestros sensores actualizan el tráfico cada 5 minutos. Los KPIs del Command Center y las alertas se actualizan automáticamente. Algunos análisis históricos y comparativos pueden tener un delay de 24 horas para procesamiento de datos.' },
+                  { title: '¿Puedo exportar los reportes?', content: 'Sí, todos los módulos permiten exportar datos en formato CSV. También puedes generar reportes PDF personalizados con tu branding desde el botón superior de cada página.' },
+                  { title: '¿Qué es la Time Machine?', content: "Time Machine es una herramienta que te permite comparar períodos temporales diferentes y predecir tráfico futuro usando IA. Incluye la 'Cápsula del Tiempo' para revivir fechas específicas y analizar tendencias estacionales." },
+                  { title: '¿Cómo funciona el Competitor Tracker?', content: 'En Sales Intelligence, selecciona una marca y el sistema mostrará un gráfico comparativo del tráfico de esa marca vs sus competidores directos en diferentes pantallas. Incluye insights estratégicos para identificar oportunidades de ataque.' },
+                  { title: '¿Qué son los Prospectos por Rubro?', content: 'Es una sección de Sales Intelligence que muestra 10 industrias potenciales para ofrecer publicidad OOH. Cada rubro incluye perfil cuantitativo, cualitativo, comportamiento por comuna y recomendaciones de campaña con inversión estimada.' }
+                ]}
+              />
 
               {/* Glosario de Términos */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-purple-400" />
-                  Glosario de Términos
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <GlossaryItem term="Share de Tráfico" definition="Porcentaje del total de vehículos que representa una marca en un segmento específico." />
-                  <GlossaryItem term="CPM" definition="Costo Por Mil impresiones. Métrica estándar para comparar eficiencia de medios." />
-                  <GlossaryItem term="Reach" definition="Número de personas únicas expuestas a una pantalla o campaña." />
-                  <GlossaryItem term="Frecuencia" definition="Promedio de veces que una persona ve una pantalla en un período." />
-                  <GlossaryItem term="YoY (Year over Year)" definition="Comparación del mismo período entre años diferentes para medir crecimiento real." />
-                  <GlossaryItem term="Heatmap" definition="Mapa de calor que muestra densidad de tráfico con colores (rojo = alto, azul = bajo)." />
-                  <GlossaryItem term="Premium Area" definition="Zona con alta concentración de vehículos de marcas premium (BMW, Mercedes, Audi, etc.)." />
-                  <GlossaryItem term="Commute" definition="Trayecto habitual entre casa y trabajo. Horarios peak: 07:00-09:00 y 17:00-20:00." />
-                </div>
-              </div>
+              <HelpSection
+                searchTerm={searchTerm}
+                icon={BookOpen}
+                iconColor="text-purple-400"
+                title="Glosario de Términos"
+                items={[
+                  { title: 'Share de Tráfico', content: 'Porcentaje del total de vehículos que representa una marca en un segmento específico.' },
+                  { title: 'CPM', content: 'Costo Por Mil impresiones. Métrica estándar para comparar eficiencia de medios.' },
+                  { title: 'Reach', content: 'Número de personas únicas expuestas a una pantalla o campaña.' },
+                  { title: 'Frecuencia', content: 'Promedio de veces que una persona ve una pantalla en un período.' },
+                  { title: 'YoY (Year over Year)', content: 'Comparación del mismo período entre años diferentes para medir crecimiento real.' },
+                  { title: 'Heatmap', content: 'Mapa de calor que muestra densidad de tráfico con colores (rojo = alto, azul = bajo).' },
+                  { title: 'Premium Area', content: 'Zona con alta concentración de vehículos de marcas premium (BMW, Mercedes, Audi, etc.).' },
+                  { title: 'Commute', content: 'Trayecto habitual entre casa y trabajo. Horarios peak: 07:00-09:00 y 17:00-20:00.' }
+                ]}
+                isGlossary
+              />
 
-              {/* Atajos de Teclado */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-cyan-400" />
-                  Atajos y Consejos Útiles
-                </h3>
-                <div className="bg-navy-950/50 border border-white/10 rounded-xl p-4 space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-1.5 rounded bg-cyan-500/10 border border-cyan-500/20">
-                      <Target className="w-4 h-4 text-cyan-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-white">Segmenta por Tipo de Vehículo</h4>
-                      <p className="text-xs text-gray-400">Usa los filtros superiores para analizar tráfico por tipo: Sedán, SUV, Pick-up, etc.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="p-1.5 rounded bg-magenta-500/10 border border-magenta-500/20">
-                      <BarChart3 className="w-4 h-4 text-magenta-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-white">Compara Períodos</h4>
-                      <p className="text-xs text-gray-400">En Time Machine, compara cualquier fecha con el mismo día del año anterior para ver tendencias.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="p-1.5 rounded bg-emerald-500/10 border border-emerald-500/20">
-                      <Layers className="w-4 h-4 text-emerald-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-white">Activa Capas en el Mapa</h4>
-                      <p className="text-xs text-gray-400">En Geo Intelligence, activa capas de transporte público y límites comunales para más contexto.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="p-1.5 rounded bg-amber-500/10 border border-amber-500/20">
-                      <Download className="w-4 h-4 text-amber-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-white">Exporta Tus Datos</h4>
-                      <p className="text-xs text-gray-400">Todos los gráficos y tablas pueden exportarse a CSV para análisis externo en Excel o Google Sheets.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Atajos y Consejos Útiles */}
+              <HelpSection
+                searchTerm={searchTerm}
+                icon={Clock}
+                iconColor="text-cyan-400"
+                title="Atajos y Consejos Útiles"
+                items={[
+                  { title: 'Segmenta por Tipo de Vehículo', content: 'Usa los filtros superiores para analizar tráfico por tipo: Sedán, SUV, Pick-up, etc.' },
+                  { title: 'Compara Períodos', content: 'En Time Machine, compara cualquier fecha con el mismo día del año anterior para ver tendencias.' },
+                  { title: 'Activa Capas en el Mapa', content: 'En Geo Intelligence, activa capas de transporte público y límites comunales para más contexto.' },
+                  { title: 'Exporta Tus Datos', content: 'Todos los gráficos y tablas pueden exportarse a CSV para análisis externo en Excel o Google Sheets.' }
+                ]}
+              />
 
               {/* Contacto Soporte */}
               <div className="bg-gradient-to-br from-cyan-500/10 to-magenta-500/10 border border-cyan-500/20 rounded-xl p-6">
@@ -443,80 +352,86 @@ export function Sidebar({ activeView, isMobileOpen = false, onCloseMobile }: Sid
   );
 }
 
-// Componente interno para tarjetas de módulos
-function HelpModuleCard({ 
-  icon: Icon, 
-  title, 
-  description, 
-  features 
-}: { 
-  icon: any; 
-  title: string; 
-  description: string; 
-  features: string[];
+// Componente unificado para secciones de ayuda con búsqueda
+function HelpSection({
+  searchTerm,
+  icon: Icon,
+  iconColor,
+  title,
+  items,
+  isGlossary = false
+}: {
+  searchTerm: string;
+  icon: any;
+  iconColor: string;
+  title: string;
+  items: { title: string; content: string }[];
+  isGlossary?: boolean;
 }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
+
+  // Filtrar items basado en el término de búsqueda
+  const filteredItems = useMemo(() => {
+    if (!searchTerm) return items;
+    const term = searchTerm.toLowerCase();
+    return items.filter(
+      item =>
+        item.title.toLowerCase().includes(term) ||
+        item.content.toLowerCase().includes(term)
+    );
+  }, [searchTerm, items]);
+
+  // No mostrar la sección si no hay resultados
+  if (searchTerm && filteredItems.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="bg-navy-950/50 border border-white/10 rounded-xl overflow-hidden">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full p-4 flex items-center gap-4 hover:bg-white/5 transition-colors text-left"
-      >
-        <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-          <Icon className="w-5 h-5 text-cyan-400" />
+    <div>
+      <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+        <Icon className={cn("w-5 h-5", iconColor)} />
+        {title}
+      </h3>
+      {isGlossary ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {filteredItems.map((item) => (
+            <div
+              key={item.title}
+              className="bg-navy-950/30 border border-white/5 rounded-lg p-3"
+            >
+              <h4 className="text-sm font-medium text-cyan-400 mb-1">{item.title}</h4>
+              <p className="text-xs text-gray-400">{item.content}</p>
+            </div>
+          ))}
         </div>
-        <div className="flex-1">
-          <h4 className="font-medium text-white">{title}</h4>
-          <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{description}</p>
-        </div>
-        <ChevronRight className={cn("w-5 h-5 text-gray-400 transition-transform", isExpanded && "rotate-90")} />
-      </button>
-      {isExpanded && (
-        <div className="px-4 pb-4 pt-2 border-t border-white/5">
-          <p className="text-sm text-gray-300 mb-3">{description}</p>
-          <ul className="space-y-1.5">
-            {features.map((feature, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-sm text-gray-400">
-                <div className="w-1 h-1 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
-                {feature}
-              </li>
-            ))}
-          </ul>
+      ) : (
+        <div className="space-y-3">
+          {filteredItems.map((item) => (
+            <div
+              key={item.title}
+              className="bg-navy-950/50 border border-white/10 rounded-xl overflow-hidden"
+            >
+              <button
+                onClick={() => setExpandedItem(expandedItem === item.title ? null : item.title)}
+                className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
+              >
+                <span className="font-medium text-white text-sm">{item.title}</span>
+                <ChevronRight
+                  className={cn(
+                    "w-5 h-5 text-gray-400 transition-transform",
+                    expandedItem === item.title && "rotate-90"
+                  )}
+                />
+              </button>
+              {expandedItem === item.title && (
+                <div className="px-4 pb-4 border-t border-white/5">
+                  <p className="text-sm text-gray-400 mt-3 leading-relaxed">{item.content}</p>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
-    </div>
-  );
-}
-
-// Componente interno para FAQ
-function FAQItem({ question, answer }: { question: string; answer: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="bg-navy-950/50 border border-white/10 rounded-xl overflow-hidden">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
-      >
-        <span className="font-medium text-white text-sm">{question}</span>
-        <ChevronRight className={cn("w-5 h-5 text-gray-400 transition-transform", isOpen && "rotate-90")} />
-      </button>
-      {isOpen && (
-        <div className="px-4 pb-4 border-t border-white/5">
-          <p className="text-sm text-gray-400 mt-3 leading-relaxed">{answer}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// Componente interno para Glosario
-function GlossaryItem({ term, definition }: { term: string; definition: string }) {
-  return (
-    <div className="bg-navy-950/30 border border-white/5 rounded-lg p-3">
-      <h4 className="text-sm font-medium text-cyan-400 mb-1">{term}</h4>
-      <p className="text-xs text-gray-400">{definition}</p>
     </div>
   );
 }
